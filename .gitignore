@@ -1,0 +1,4 @@
+# Specific to the example project build process
+/node_modules
+/bower_components
+/public
