@@ -1,0 +1,12 @@
+# For [appservers] defined in deploy/ansible/inventory/production
+
+env: production
+
+# Should the nginx server us HTTPS instead of HTTP?
+ssl: true
+
+# If ssl is enabled, these cert/key files will be used by nginx. You will need
+# to ensure these files are valid and already on the server (which you can do
+# via cloud-init, scp, etc).
+ssl_cert_path: /etc/ssl/star.bocoup.com.cert
+ssl_key_path: /etc/ssl/star.bocoup.com.key

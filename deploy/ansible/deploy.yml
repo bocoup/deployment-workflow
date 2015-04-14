@@ -1,0 +1,9 @@
+# Clone, build, and deploy, restarting nginx if necessary.
+
+- hosts: appservers
+  sudo: yes
+  vars:
+    commit: master
+    force: false
+  roles:
+    - deploy

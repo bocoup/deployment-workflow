@@ -1,0 +1,12 @@
+# Provision server and deploy code.
+
+- hosts: all
+  sudo: yes
+  roles:
+    - base
+    - configure
+    - nginx
+  handlers:
+    - include: handlers/handlers.yml
+
+- include: deploy.yml
