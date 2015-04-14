@@ -1,2 +1,7 @@
+# Specific to this project
+/node_modules
+/bower_components
+/public
+
 # For the deployment workflow
 .vagrant
