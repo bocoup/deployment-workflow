@@ -1,0 +1,31 @@
+# Generate strong dhe param and self-signed ssl cert/key (in development only!).
+# In production, you'll need your own valid ssl cert/key.
+
+- name: generate strong dhe parameter
+  shell: openssl dhparam -dsaparam -out {{dhe_param_path}} 4096
+  args:
+    creates: "{{dhe_param_path}}"
+  notify: restart nginx
+
+- name: create self-signed ssl cert/key - development only!
+  command: >
+    openssl req -new -nodes -x509
+    -subj "/C=US/ST=Oregon/L=Portland/O=IT/CN={{app_fqdn}}" -days 3650
+    -keyout {{ssl_key_path}} -out {{ssl_cert_path}} -extensions v3_ca
+  args:
+    creates: "{{ssl_cert_path}}"
+  when: env == 'development'
+  notify: restart nginx
+
+- name: ensure ssl cert/key exist
+  stat: path={{item}}
+  register: ssl_files
+  with_items:
+    - "{{ssl_cert_path}}"
+    - "{{ssl_key_path}}"
+
+- fail: msg="ssl cert file {{ssl_cert_path}} missing"
+  when: not ssl_files.results[0].stat.exists
+
+- fail: msg="ssl key file {{ssl_key_path}} missing"
+  when: not ssl_files.results[1].stat.exists
