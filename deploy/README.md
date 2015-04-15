@@ -347,11 +347,13 @@ run the `ansible-playbook` command or one of the included [deploy helper
 scripts](#deploy-helper-scripts) to execute the following playbooks on the
 remote staging or production server:
 
-* [ansible/provision.yml](ansible/provision.yml) - Perform base, configure,
-  nginx, deploy roles. This script must be run when a server is first set up.
-* [ansible/deploy.yml](ansible/deploy.yml) - Perform only deploy role. This is
-  much faster than provisioning, but only works if the server has already been
-  provisioned.
+* [ansible/provision.yml](ansible/provision.yml) - Perform base, configure and
+  nginx roles. This playbook must be run when a server is first created and
+  is typically only run once. It may be run again if you make server-level
+  changes or need to update any installed apt modules to their latest versions.
+* [ansible/deploy.yml](ansible/deploy.yml) - Perform deploy role. This playbook
+  must be run after provisioning, and is used to deploy and build the specified
+  commit (see [extra vars](#extra-vars)) on the server.
 
 It's recommended that you run one of the included [deploy helper
 scripts](#deploy-helper-scripts) instead of running the `ansible-playbook`
@@ -438,8 +440,8 @@ and passing optional extra vars:
 * Don't type in the `$`, that's just there to simulate your shell prompt.
 
 ```bash
-# Provision the production server using the "ubuntu" user, deploying the current
-# HEAD of master, building it, symlinking it and making it live.
+# Provision the production server using the "ubuntu" user. Note that while this
+# installs apt packages, configures Nginx, etc. the site won't be deployed yet.
 
 $ ./deploy/provision-production.sh --user=ubuntu
 
