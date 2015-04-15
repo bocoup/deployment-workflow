@@ -1,0 +1,22 @@
+# All project build tasks go here. These tasks will only be run for the
+# specified commit if the commit hasn't been deployed before or if "force"
+# is true.
+
+# Modify as-needed!
+
+- name: install npm modules
+  npm: path="{{clone_path}}"
+
+- name: install bower modules
+  command: bower install --allow-root
+  args:
+    chdir: "{{clone_path}}"
+
+- name: build production version
+  shell: npm run build
+  args:
+    chdir: "{{clone_path}}"
+
+- name: generate build info file
+  template: src=build_info.txt dest={{clone_path}}/{{build_info_path}}
+  when: build_info_path is defined
