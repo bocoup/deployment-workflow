@@ -1,0 +1,11 @@
+# Clone, build, and deploy, restarting Nginx if necessary. This playbook must
+# be run after provisioning, and is used to deploy and build the specified
+# commit (overridable via extra vars) on the server.
+
+- hosts: all
+  sudo: yes
+  vars:
+    commit: master
+    force: false
+  roles:
+    - deploy
