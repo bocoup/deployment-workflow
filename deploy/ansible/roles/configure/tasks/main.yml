@@ -1,0 +1,25 @@
+# Configure the box. This happens after system dependencies are installed,
+# but before the project is cloned or built.
+
+- name: set hostname
+  hostname: name={{hostname}}
+
+- name: add loopback references to our domain in /etc/hosts
+  lineinfile: "dest=/etc/hosts line='127.0.0.1 {{hostname}} {{app_fqdn}}'"
+
+- name: get github public key
+  command: /usr/bin/ssh-keyscan github.com
+  register: github_keyscan
+
+- name: add github key to ssh known hosts
+  lineinfile: dest=/etc/ssh/ssh_known_hosts
+    create=yes
+    regexp='^github.com'
+    line="{{github_keyscan.stdout}}"
+
+- name: ensure ssh agent socket environment variable persists when sudoing
+  lineinfile: dest=/etc/sudoers
+    insertafter='^Defaults'
+    line='Defaults env_keep += "SSH_AUTH_SOCK"'
+    state=present
+    validate='visudo -cf %s'
