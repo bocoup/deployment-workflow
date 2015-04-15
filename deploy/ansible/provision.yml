@@ -8,5 +8,3 @@
     - nginx
   handlers:
     - include: handlers/handlers.yml
-
-- include: deploy.yml
