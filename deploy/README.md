@@ -70,9 +70,9 @@ This environment is used for staging and production servers
 ([appservers group](#group-variables)):
 
 * When a commit is deployed, the Nginx-served public directory is automatically
-  symlinked to a sha-named Git repository clone that has that specific commit
-  (or ref, eg. master) checked out. This requires the commit-to-be-checked-out
-  to be pushed to the configured Git repository before deployment.
+  symlinked to a sha-named Git repository directory that has that specific
+  commit (or ref, eg. master) checked out. This requires the commit-to-be-
+  checked-out to be pushed to the configured Git repository before deployment.
 * When a commit is deployed, building is automatically done after the Git
   repository is cloned, but before the website or web app is made "live." If a
   commit has already been deployed (eg. when reverting to a previous version),
@@ -135,8 +135,8 @@ Notes:
 ## Initial Setup
 
 Copy this project's files so that the [deploy](.) directory is in the root
-directory of your repository. Be sure to copy recursively and preserve file
-modes, eg. executable, so that bash helper scripts continue to work. The
+of your repository. Be sure to copy recursively and preserve file modes, eg.
+executable, so that bash helper scripts continue to work. The
 [Vagrantfile](#vagrantfile) should be placed in your repository root
 directory, _not_ the deploy directory.
 
@@ -322,9 +322,9 @@ _For most projects, these files won't need to change._
 * [ansible/roles/nginx/tasks/main.yml](ansible/roles/nginx/tasks/main.yml)
 * [ansible/roles/nginx/tasks/ssl.yml](ansible/roles/nginx/tasks/ssl.yml)
 
-These files contain tasks to generate Nginx config files (and SSL configuration,
-if SSL was specified), rolling back changes if any part of the config is
-invalid.
+These files contain tasks to generate Nginx config files (and hardened SSL
+configuration, if SSL was specified), rolling back changes if any part of
+the config is invalid.
 
 Note: if SSL is enabled for production (appservers), the SSL cert files must
 exist on the server _before_ provisioning, or this task will fail.
