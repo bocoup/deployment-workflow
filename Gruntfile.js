@@ -57,15 +57,21 @@ module.exports = function(grunt) {
     markdown: {
       options: {
         template: 'build/index.html',
-        postCompile: function(src, context) {
-          return postReplacements.reduce(function(src, arr) {
-            return src.replace.apply(src, arr);
-          }, src);
-        },
       },
       readme: {
+        options: {
+          postCompile: function(src, context) {
+            return postReplacements.reduce(function(src, arr) {
+              return src.replace.apply(src, arr);
+            }, src);
+          },
+        },
         src: 'deploy/README.md',
         dest: 'public/index.html',
+      },
+      '404': {
+        src: 'build/404.md',
+        dest: 'public/404.html',
       }
     }
   });
