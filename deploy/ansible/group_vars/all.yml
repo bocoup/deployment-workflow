@@ -28,6 +28,3 @@ public_path: "{{site_path}}/public"
 # different server naming scheme or don't work at Bocoup ;)
 hostname: "{{project_name}}"
 app_fqdn: "{{project_name}}.bocoup.com"
-
-# If ssl is enabled, auto-generate a stronger dhe param for better security.
-dhe_param_path: /etc/ssl/certs/dhparam.pem

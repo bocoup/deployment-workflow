@@ -1,3 +1,4 @@
+dhe_param_path: /etc/ssl/certs/dhparam.pem
 nginx_dir: /etc/nginx
 conf_dir: "{{nginx_dir}}/conf.d"
 shared:

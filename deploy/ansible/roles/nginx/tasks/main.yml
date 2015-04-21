@@ -4,6 +4,9 @@
 - include: ssl.yml
   when: ssl
 
+- name: ensure default nginx server is not present
+  file: path=/etc/nginx/sites-enabled/default state=absent
+
 - name: ensure nginx config files exist
   shell: touch {{item.directory}}/{{item.file}}
   args:
