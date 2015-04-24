@@ -338,15 +338,20 @@ back changes if any part of the config is invalid.
 Note: if SSL is enabled for production (appservers), the SSL cert files must
 exist on the server _before_ provisioning, or this task will fail.
 
-#### Deploy role other tasks
+#### Deploy role
 
 * [ansible/roles/deploy/tasks/main.yml](ansible/roles/deploy/tasks/main.yml)
 * [ansible/roles/deploy/tasks/checkout.yml](ansible/roles/deploy/tasks/checkout.yml)
+* [ansible/roles/deploy/vars/main.yml](ansible/roles/deploy/vars/main.yml)
 
 These tasks will clone the Git repository and check out the specified commit
 unless it has already been cloned. The build may be forced to clone and build
 regardless of prior status. When done, the specified commit will be symlinked to
-make it go "live."
+make it go live, and old clones will be removed if necessary to free up disk
+space.
+
+The number of recent clones to retain may be adjusted via the
+`keep_n_most_recent` variable.
 
 ## Developing
 
