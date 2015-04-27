@@ -24,7 +24,10 @@ build_info_path: "public/build.txt"
 # where your index.html file exists (or will exist after the build process).
 public_path: "{{site_path}}/public"
 
-# The server hostname and FQDN. These might need to change if you have a
-# different server naming scheme or don't work at Bocoup ;)
+# This is what you'll see at the bash prompt if/when you ssh into your server.
 hostname: "{{project_name}}"
+
+# This is the fully qualified domain name you'll use to view your project.
+# This might need to change if you have a different server naming scheme or
+# don't work at Bocoup ;)
 app_fqdn: "{{project_name}}.bocoup.com"
