@@ -7,5 +7,6 @@
   vars:
     commit: master
     force: false
+    local: false
   roles:
     - deploy
