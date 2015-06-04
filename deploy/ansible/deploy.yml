@@ -10,3 +10,5 @@
     local: false
   roles:
     - deploy
+  handlers:
+    - include: handlers/handlers.yml
