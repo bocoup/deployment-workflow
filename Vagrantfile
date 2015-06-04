@@ -6,9 +6,10 @@ VAGRANTFILE_API_VERSION = '2'
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = 'ubuntu/trusty64'
 
-  # This directory should be the same as the site_path setting in
-  # deploy/ansible/group_vars/all.yml
-  config.vm.synced_folder '.', '/mnt/site'
+  # Allow the project directory to be accessible inside the Vagrant box.
+  # This should match the synced_folder setting specified in the ansible
+  # "localdev" config.
+  config.vm.synced_folder '.', '/mnt/vagrant'
 
   # Ideally, this IP will be unique, so the entry added to /etc/hosts won't
   # conflict with that of another project.

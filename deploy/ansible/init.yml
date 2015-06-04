@@ -3,3 +3,4 @@
 
 - include: provision.yml
 - include: configure.yml
+- include: link.yml

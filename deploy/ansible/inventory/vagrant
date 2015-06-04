@@ -1,0 +1,8 @@
+# This inventory allows you to run playbooks via ansible-playbook instead of
+# having to use "vagrant provision" every time. Develop and test deployment
+# in vagrant before deploying to staging or production. This should match the
+# config.hostsupdater.aliases setting specified in the Vagrantfile and the
+# app_fqdn setting in the ansible "localdev" config.
+
+[localdev]
+deployment-workflow.loc
