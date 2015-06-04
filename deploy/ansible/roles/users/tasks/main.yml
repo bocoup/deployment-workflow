@@ -1,6 +1,7 @@
 # Ensure all users have been added, along with any public keys. If any users'
 # state=absent, they will be removed. If any keys are removed, they will be
-# deleted.
+# deleted. In a development environment, make sudo passwordless, for
+# convenience.
 
 - name: ensure users are synced
   user: name={{item.name}}
@@ -17,3 +18,10 @@
     state=present exclusive=yes
   with_items: users
   when: item.public_keys is defined and item.public_keys | length > 0
+
+- name: allow passwordless sudo - development only!
+  lineinfile: dest=/etc/sudoers
+    regexp="^%sudo"
+    line="%sudo	ALL=(ALL:ALL) NOPASSWD:ALL"
+    validate="visudo -cf %s"
+  when: env == "development"
