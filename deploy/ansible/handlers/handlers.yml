@@ -1,2 +1,6 @@
 - name: restart nginx
   service: name=nginx state=restarted
+- name: restart sshd
+  command: service ssh restart
+  # https://github.com/ansible/ansible-modules-core/pull/999
+  # service: name=ssh state=restarted

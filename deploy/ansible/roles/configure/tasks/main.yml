@@ -10,6 +10,22 @@
     state=present
     line="127.0.0.1 {{hostname}} {{app_fqdn}}"
 
+- name: disallow password authentication
+  lineinfile:
+    dest=/etc/ssh/sshd_config
+    state=present
+    regexp="^PasswordAuthentication"
+    line="PasswordAuthentication no"
+  notify: restart sshd
+
+- name: disallow challenge response authentication
+  lineinfile:
+    dest=/etc/ssh/sshd_config
+    state=present
+    regexp="^ChallengeResponseAuthentication"
+    line="ChallengeResponseAuthentication no"
+  notify: restart sshd
+
 - name: ensure github.com is a known host
   lineinfile:
     dest=/etc/ssh/ssh_known_hosts
