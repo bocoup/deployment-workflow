@@ -1,5 +1,6 @@
 # Specify production app servers here. Once provisioning and deployment have
-# been tested locally or in staging, make changes "live" here.
+# been tested in vagrant or in staging, make changes "live" here. This should
+# match the ansible global app_fqdn setting.
 
 [appservers]
 deployment-workflow.bocoup.com
