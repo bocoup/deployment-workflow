@@ -5,19 +5,40 @@ of a modern website or web app using Vagrant, Ubuntu, nginx and HTTP/HTTPS. Many
 tasks have been separated into separate roles, and as much configuration as
 possible has been abstracted into external variables.
 
-The main goals of this workflow are to allow you to:
+High-level benefits include:
 
-* Easily provision (ie. initialize, configure) local development, staging and
-  production web servers.
-* Easily test your project on a local development server, allowing you to work
-  offline.
-* Easily test your project on a staging server, allowing you to perform QA and
-  final testing before going "live" in production.
-* Easily deploy (and re-deploy) your project to staging and production servers.
+* A new server can be up and running with fully deployed code in just a few
+  minutes.
+* An update to an existing project can be deployed and built in under a minute.
+* A project can be rolled back to a previously-deployed version in a matter of
+  seconds.
+* Updates to server configuration can be made in a matter of seconds.
+* Code can be tested locally in Vagrant before being deployed to a production
+  server.
+* Code can be tested on a staging server for QA or final testing before being
+  deployed to a production server.
+* Server configuration and project deployment can be made to scale to any number
+  of remote hosts.
 
-Because this workflow will be copied into projects and modified, here are links
-to the official, original project home page, documentation, git repository and
-wiki:
+More specific benefits include:
+
+* Almost all server configuration and project deployment information is stored
+  in the project, making it easy to destroy and re-create servers with
+  confidence.
+* All project maintainer user account information is stored in the project,
+  making it easy to add or remove project maintainers.
+* SSH agent forwarding allows the remote server to access private GitHub
+  repos without requiring a private key to be copied to the server.
+* While working locally, the Vagrant box can easily be toggled between
+  development and deployment modes at any time. This allows local changes to
+  be previewed instantly (development) or a specific commit to be built as it
+  would be in production (deployment).
+* SSL certs can be auto-generated for testing HTTPS in development.
+* Because the entire deployment workflow is comprised of Ansible playbooks and a
+  Vagrantfile, it can be easily modified to meet any project's needs.
+
+Here are links to the official, original project home page, documentation, Git
+repository and wiki:
 
 * [Canonical home page & documentation](https://deployment-workflow.bocoup.com/)
 * [Canonical git repository](https://github.com/bocoup/deployment-workflow/)
@@ -25,13 +46,9 @@ wiki:
 
 Notes:
 
-* This workflow has been thoroughly tested in [Ubuntu 14.04 LTS
-  (trusty)](http://releases.ubuntu.com/14.04/). More specifically, with the
-  [ubuntu/trusty64](https://vagrantcloud.com/ubuntu/boxes/trusty64) Vagrant
-  image and with the AWS EC2 `Ubuntu Server 14.04 LTS` AMI, using the default
-  `ubuntu` user. Minor adjustments might need to be made for other providers,
-  while more substantial changes might need to be made for other Ubuntu versions
-  or Linux distributions.
+* Even though Node.js, npm and Bower are used in this sample project, with minor
+  edits this workflow can be made to work with basically any programming
+  language, package manager, etc.
 * This workflow won't teach you how to create an AWS instance. Fortunately,
   there are already excellent guides for [creating a key
   pair](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html),
@@ -39,9 +56,12 @@ Notes:
   group](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-network-security.html)
   and [launching an
   instance](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-launch-instance_linux.html).
-* Even though Node.js, npm and Bower are used in these sample files, with minor
-  edits this workflow can be made to work with basically any programming
-  language, package manager, etc.
+* This workflow has been thoroughly tested in [Ubuntu 14.04 LTS
+  (trusty)](http://releases.ubuntu.com/14.04/). More specifically, with the
+  [ubuntu/trusty64](https://vagrantcloud.com/ubuntu/boxes/trusty64) Vagrant
+  image and with the AWS EC2 `Ubuntu Server 14.04 LTS` AMI. Minor adjustments
+  might need to be made for other providers, while more substantial changes
+  might need to be made for other Ubuntu versions or Linux distributions.
 * While the decisions made in this project are the result of significant time
   and testing, this should be considered a starting point; you're encouraged to
   edit the included playbooks to meet your project's specific needs.

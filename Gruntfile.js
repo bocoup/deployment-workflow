@@ -2,6 +2,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-markdown');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-contrib-watch');
 
   var githubUrl = 'https://github.com/bocoup/deployment-workflow/';
   var postReplacements = [
@@ -73,7 +74,16 @@ module.exports = function(grunt) {
         src: 'build/404.md',
         dest: 'public/404.html',
       }
-    }
+    },
+    watch: {
+      readme: {
+        files: [
+          'deploy/README.md',
+          'build/**',
+        ],
+        tasks: ['default']
+      },
+    },
   });
 
   grunt.registerTask('default', ['clean', 'copy', 'markdown']);

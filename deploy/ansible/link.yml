@@ -1,0 +1,8 @@
+# Run the link role.
+
+- hosts: localdev
+  sudo: yes
+  roles:
+    - {role: link, tags: link}
+  handlers:
+    - include: handlers/handlers.yml
