@@ -1,0 +1,15 @@
+# Specified users will be added to the remote server, along with all specified
+# public keys. Removing a user from this list does NOT remove them from the
+# remote server! You need to set their state to "absent", remove all the other
+# properties for that user, and re-run the "configure" playbook. Also, the
+# shadow password should be a hash of your sudo password, and NOT plain text!
+# Generate a password hash using the following command:
+# openssl passwd -1 -salt $(openssl rand -base64 6) yourpassword
+
+users:
+  - name: cowboy
+    state: present
+    real_name: Ben Alman
+    shadow_pass: $1$v2zFSFYZ$UE4SWvZNRCSp9tewVFAe8/
+    public_keys:
+      - ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAtUUvs69wWAwb2bos+hCOgMlEZcivoniUSDYn4PazXqdvr6GYj2B2nrLDMeTcpnpTC+43lMpWz19xGDGQ8QF86pf1zuUXBKxtUHuNBFJwkIKmjiw816GGEqASsz0dcqBALmSXOZrZ4+ekolL3ec1VnSyo4sBRYfa5du/FvWkCzlJEBISbzrpskJyXHOB5mC2k1J6aMnvLIBG6Z2OPaD37L3lMmgrDwiHkEsqoeQzUNYC+/68WH3i80YEkpjIaFQp06b2u5uA6jGwCjQAmcjMrzL/+4n33y9mD0cXCdVz6ivbr/wOxJHo8kCmMivMUeMkG538yWcPBWjW5bEcYG0BBdw== cowboy@cowbook
