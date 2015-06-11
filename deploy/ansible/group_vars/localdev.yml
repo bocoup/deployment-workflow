@@ -1,5 +1,7 @@
 # For [localdev] referenced in the Vagrantfile
 
+# Certain tasks should never be be run in a production environment. However,
+# they may be run in a development environment for convenience.
 env: development
 
 # Vagrant box hostname and FQDN. The app_fqdn setting should match the

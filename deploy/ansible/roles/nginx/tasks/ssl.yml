@@ -14,7 +14,7 @@
     -keyout {{ssl_key_path}} -out {{ssl_cert_path}} -extensions v3_ca
   args:
     creates: "{{ssl_cert_path}}"
-  when: env == 'development'
+  when: env == "development"
   notify: restart nginx
 
 - name: ensure ssl cert/key exist

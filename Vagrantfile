@@ -10,11 +10,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # deploy/ansible/group_vars/all.yml
   config.vm.synced_folder '.', '/mnt/site'
 
-  # Ideally, this IP will be unique, so entry added to /etc/hosts won't
+  # Ideally, this IP will be unique, so the entry added to /etc/hosts won't
   # conflict with that of another project.
   config.vm.network :private_network, ip: '192.168.33.99'
 
-  # Automatically add an entry to /etc/hosts for this vagrant box. This
+  # Automatically add an entry to /etc/hosts for this Vagrant box. This
   # requires sudo. This should match the app_fqdn setting specified in the
   # ansible "localdev" config.
   config.hostsupdater.aliases = ['deployment-workflow.loc']
