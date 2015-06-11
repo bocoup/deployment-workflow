@@ -6,6 +6,7 @@
   sudo: yes
   roles:
     - {role: configure, tags: configure}
+    - {role: users, tags: users}
     - {role: nginx, tags: nginx}
   handlers:
     - include: handlers/handlers.yml
