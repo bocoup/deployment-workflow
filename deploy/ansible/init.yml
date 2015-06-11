@@ -1,0 +1,5 @@
+# This playbook saves the trouble of running each of the following playbooks
+# individually.
+
+- include: provision.yml
+- include: configure.yml
