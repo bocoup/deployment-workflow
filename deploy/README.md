@@ -5,19 +5,42 @@ of a modern website or web app using Vagrant, Ubuntu, nginx and HTTP/HTTPS. Many
 tasks have been separated into separate roles, and as much configuration as
 possible has been abstracted into external variables.
 
-The main goals of this workflow are to allow you to:
+High-level benefits include:
 
-* Easily provision (ie. initialize, configure) local development, staging and
-  production web servers.
-* Easily test your project on a local development server, allowing you to work
-  offline.
-* Easily test your project on a staging server, allowing you to perform QA and
-  final testing before going "live" in production.
-* Easily deploy (and re-deploy) your project to staging and production servers.
+* A new server can be up and running with fully deployed code in just a few
+  minutes.
+* An update to an existing project can be deployed and built in under a minute.
+* A project can be rolled back to a previously-deployed version in a matter of
+  seconds.
+* Updates to server configuration can be made in a matter of seconds.
+* Most server configuration and code updates can be made with zero server
+  downtime.
+* Code can be tested locally in Vagrant before being deployed to a production
+  server.
+* Code can be tested on a staging server for QA or final testing before being
+  deployed to a production server.
+* Server configuration and project deployment can be made to scale to any number
+  of remote hosts.
 
-Because this workflow will be copied into projects and modified, here are links
-to the official, original project home page, documentation, git repository and
-wiki:
+More specific benefits include:
+
+* Almost all server configuration and project deployment information is stored
+  in the project, making it easy to destroy and re-create servers with
+  confidence.
+* All project maintainer user account information is stored in the project,
+  making it easy to add or remove project maintainers.
+* SSH agent forwarding allows the remote server to access private GitHub
+  repos without requiring a private key to be copied to the server.
+* While working locally, the Vagrant box can easily be toggled between
+  development and deployment modes at any time. This allows local changes to
+  be previewed instantly (development) or a specific commit to be built as it
+  would be in production (deployment).
+* SSL certs can be auto-generated for testing HTTPS in development.
+* Because the entire deployment workflow is comprised of Ansible playbooks and a
+  Vagrantfile, it can be easily modified to meet any project's needs.
+
+Here are links to the official, original project home page, documentation, Git
+repository and wiki:
 
 * [Canonical home page & documentation](https://deployment-workflow.bocoup.com/)
 * [Canonical git repository](https://github.com/bocoup/deployment-workflow/)
@@ -25,13 +48,9 @@ wiki:
 
 Notes:
 
-* This workflow has been thoroughly tested in [Ubuntu 14.04 LTS
-  (trusty)](http://releases.ubuntu.com/14.04/). More specifically, with the
-  [ubuntu/trusty64](https://vagrantcloud.com/ubuntu/boxes/trusty64) Vagrant
-  image and with the AWS EC2 `Ubuntu Server 14.04 LTS` AMI, using the default
-  `ubuntu` user. Minor adjustments might need to be made for other providers,
-  while more substantial changes might need to be made for other Ubuntu versions
-  or Linux distributions.
+* Even though Node.js, npm and Bower are used in this sample project, with minor
+  edits this workflow can be made to work with basically any programming
+  language, package manager, etc.
 * This workflow won't teach you how to create an AWS instance. Fortunately,
   there are already excellent guides for [creating a key
   pair](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html),
@@ -39,12 +58,158 @@ Notes:
   group](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-network-security.html)
   and [launching an
   instance](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-launch-instance_linux.html).
-* Even though Node.js, npm and Bower are used in these sample files, with minor
-  edits this workflow can be made to work with basically any programming
-  language, package manager, etc.
-* While the decisions made in this project are the result of significant time
-  and testing, this should be considered a starting point; you're encouraged to
-  edit the included playbooks to meet your project's specific needs.
+* This workflow has been thoroughly tested in [Ubuntu 14.04 LTS
+  (trusty)](http://releases.ubuntu.com/14.04/). More specifically, with the
+  [ubuntu/trusty64](https://vagrantcloud.com/ubuntu/boxes/trusty64) Vagrant
+  image and with the AWS EC2 `Ubuntu Server 14.04 LTS` AMI. Minor adjustments
+  might need to be made for other providers, while more substantial changes
+  might need to be made for other Ubuntu versions or Linux distributions.
+* While this workflow has been designed to meet the needs of a typical use
+  case, it might not meet your project's needs exactly. Consider this to be
+  a starting point; you're encouraged to edit the included playbooks and roles!
+
+## Ansible, Playbooks and Roles
+
+At the core of this workflow is Ansible, an IT automation tool. Ansible aims to
+be simple to configure and easy to use, while being secure and reliable. In this
+workflow, Ansible is used to configure systems and deploy software.
+
+Ansible playbooks are human-readable documents that describe and configure the
+tasks that Ansible will run on a remote server. They should be idempotent,
+allowing them to be run and re-run on the same or different servers, yielding
+the exact same result each time.
+
+There are multiple ways to organize playbooks, and while it's possible to put
+all your tasks into a single playbook, it's often beneficial to separate related
+tasks into "roles" that can be included in one or more playbooks, for easy reuse
+and organization.
+
+### Playbooks
+
+The following playbooks are included in this workflow:
+
+* [provision playbook](#provision-playbook)
+* [configure playbook](#configure-playbook)
+* [deploy playbook](#deploy-playbook)
+* [link playbook](#link-playbook)
+* [init playbook](#init-playbook)
+
+For more detailed information on what each playbook actually does, be sure to
+check out the description of the individual roles that each playbook uses.
+
+#### provision playbook
+
+Provision server. This playbook must be run when a server is first created
+and is typically only run once. It may be run again if you make server-level
+changes or need to update any installed apt modules to their latest versions.
+If you were creating a new AMI or base box, you'd do so after running only
+this playbook.
+
+* Playbook: [ansible/provision.yml](ansible/provision.yml)
+* Roles: [base](#base-role)
+
+#### configure playbook
+
+Configure server. This playbook is run after a server is provisioned but
+before a project is deployed, to configure the system, add user accounts,
+and setup long-running processes like nginx, postgres, etc.
+
+* Playbook: [ansible/configure.yml](ansible/configure.yml)
+* Roles: [configure](#configure-role), [users](#users-role), [nginx](#nginx-role)
+
+#### deploy playbook
+
+Clone, build, and deploy, restarting nginx if necessary. This playbook must
+be run after `provision` and `configure`, and is used to deploy and build the
+specified commit (overridable via extra vars) on the server. Running this
+playbook in Vagrant will override the `link` playbook, and vice-versa.
+
+* Playbook: [ansible/deploy.yml](ansible/deploy.yml)
+* Roles: [deploy](#deploy-role)
+
+#### link playbook
+
+Link the local project directory into the Vagrant box, allowing local changes
+to be previewed there immediately. Note that when linked, any building will
+need to be done at the local command line, and not via playbook. Running this
+playbook in Vagrant will override the `deploy` playbook, and vice-versa.
+
+* Playbook: [ansible/link.yml](ansible/link.yml)
+* Roles: [link](#link-role)
+
+#### init playbook
+
+This playbook saves the trouble of running the `provision`, `configure` and
+`link` playbooks individually, and is provided for convenience. After `vagrant
+up`, this playbook will be run on the new Vagrant box.
+
+* Playbook: [ansible/init.yml](ansible/init.yml)
+
+### Roles
+
+The following roles are used by this workflow's playbooks:
+
+* [base role](#base-role)
+* [configure role](#configure-role)
+* [nginx role](#nginx-role)
+* [users role](#users-role)
+* [deploy role](#deploy-role)
+* [link role](#link-role)
+
+#### base role
+
+Get the box up and running. These tasks run before the box is configured
+or the project is cloned or built. All system dependencies should be
+installed here.
+
+<!--role-files base-->
+
+#### configure role
+
+Configure the box. This happens after the base initialization, but before
+the project is cloned or built.
+
+<!--role-files configure-->
+
+#### nginx role
+
+Generate nginx config files (and ssl configuration, if ssl was specified),
+rolling back changes if any part of the config is invalid.
+
+<!--role-files nginx-->
+
+#### users role
+
+Ensure all users have been added, along with any public keys. If any users'
+`state=absent`, they will be removed. If any keys are removed, they will be
+deleted. In a development environment, make sudo passwordless, for
+convenience.
+
+Specify users in the [group_vars/all.yml](ansible/group_vars/all.yml) file.
+
+**When creating a new project using this workflow, REPLACE THE DEFAULT USERS
+WITH YOUR OWN USERS. If you leave the default users, we'll all have access to
+your servers, which is something we really don't want.**
+
+<!--role-files users-->
+
+#### deploy role
+
+TODO: DESCRIBE
+
+<!--role-files deploy-->
+
+#### link role
+
+Instead of cloning the git repo and building like the `deploy` playbook, this
+playbook links your local working project directory into the Vagrant box so
+that you can instantly preview your local changes on the server, for
+convenience while developing. While in this mode, all building will have to
+be done manually, at the command line of your development machine.
+
+<!--role-files link-->
+
+# =======================================
 
 ## Environments
 
@@ -219,7 +384,7 @@ Additionally, these files may contain settings that differ per-host. Like the
 aforementioned [host variables](#host-variables), settings defined here will
 override those defined in the [global variables](#global-variables) and [group
 variables](#group-variables) files. For example, in the staging inventory, the
-`app_fqdn` variable can be set to the staging server's FQDN, allowing nginx to
+`site_fqdn` variable can be set to the staging server's FQDN, allowing nginx to
 respond to requests made to _its_ FQDN instead of the production server's FQDN.
 _If you have a lot of host-specific variables, you should define them in a
 separate [host variables](#host-variables) file._
@@ -231,7 +396,7 @@ separate [host variables](#host-variables) file._
 This file contains Apt keys, Apt PPAs, Apt packages and global npm modules to be
 installed before your project is cloned or built. If you need custom packages or
 modules to be installed, specify them here. If you don't use npm, just remove it
-along with the npm-specific [base role tasks](#base-role-tasks)!
+along with the npm-specific [base role tasks](#base-role-files)!
 
 Note:
 
@@ -264,29 +429,6 @@ documentation](http://nginx.org/en/docs/).
 If you want to make modifications that might differ per-environment, like
 enabling SSL or changing the location of SSL cert/key files, you should do so
 via [group variables](#group-variables).
-
-### Deploy role build tasks
-
-* [ansible/roles/deploy/tasks/build.yml](ansible/roles/deploy/tasks/build.yml)
-
-This file contains all the build tasks that need to be run after your project is
-cloned, eg. `npm install`, `bower install`, `npm run build`. You may or may not
-need to modify this file, depending on your project's build process.
-Additionally, if `build_info_path` is defined (see [global
-variables](#global-variables)), a build info file will be automatically
-generated at the end of this process.
-
-General recommendations:
-
-* For an npm-based project, create a `build` [npm
-  script](https://docs.npmjs.com/misc/scripts) in your project's `package.json`
-  that runs whichever framework-specific build command your project needs. That
-  way, you might not have to modify this file.
-* Run `bower install` as a separate task, and _not_ in an npm install script.
-  That way, it can be reasoned about separately from the `npm install` task. Or
-  don't use Bower at all; many client-side packages are available in npm.
-* Don't be afraid to modify these tasks. Your project's build process might need
-  to be vastly different than what's here, so adjust accordingly!
 
 ### Ansible configuration file
 
@@ -422,16 +564,6 @@ Note that the following flags apply to both `ansible-playbook` and the included
   launch an AWS EC2 instance and [create a new key
   pair](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html),
   the keyfile is the `.pem` file that you download.
-
-#### Extra vars
-
-These variables are defined in [ansible/deploy.yml](ansible/deploy.yml) and may
-be overridden on the command-line in the format `--extra-vars="foo=12 bar=34"`.
-
-* `commit` - Defaults to `master`. Specify any ref (eg. branch, tag) or SHA to
-  be deployed.
-* `force` - Defaults to `false`. If the specified commit SHA has already been
-  deployed, it won't be re-cloned or re-built unless this is `true`.
 
 ### Deploy helper scripts
 
