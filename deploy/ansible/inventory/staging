@@ -3,5 +3,4 @@
 # app_fqdn variable here will allow nginx to respond to requests made to its
 # FQDN instead of the production server's FQDN.
 
-[appservers]
 deployment-workflow-staging.bocoup.com app_fqdn=deployment-workflow-staging.bocoup.com

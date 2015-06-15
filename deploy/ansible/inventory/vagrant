@@ -4,5 +4,4 @@
 # config.hostsupdater.aliases setting specified in the Vagrantfile and the
 # app_fqdn setting in the ansible "localdev" config.
 
-[localdev]
-deployment-workflow.loc
+vagrant ansible_ssh_host=deployment-workflow.loc

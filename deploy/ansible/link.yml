@@ -1,6 +1,6 @@
 # Run the link role.
 
-- hosts: localdev
+- hosts: vagrant
   sudo: yes
   roles:
     - {role: link, tags: link}
