@@ -6,7 +6,8 @@
 env: development
 
 # Vagrant box synced folder. This should match the config.vm.synced_folder
-# setting in the Vagrantfile.
+# setting in the Vagrantfile, and should be different than the site_path,
+# clone_path or public_path vars.
 synced_folder: "/mnt/vagrant"
 
 # Vagrant box hostname and FQDN. The app_fqdn setting should match the
