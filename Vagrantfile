@@ -28,9 +28,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # ansible-playbook (like in production), but adding this code saves the
   # trouble of having to run ansible-playbook manually after "vagrant up".
   config.vm.provision 'ansible' do |ansible|
-    # Add the vagrant box (the config.vm.define value) to the "localdev"
-    # group so its vars are used when provisioning.
-    ansible.groups = {'localdev' => ['vagrant']}
     # Run init playbook (which runs base, configure, link playbooks).
     ansible.playbook = 'deploy/ansible/init.yml'
   end

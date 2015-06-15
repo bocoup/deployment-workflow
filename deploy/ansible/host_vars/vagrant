@@ -1,5 +1,5 @@
-# For [localdev] defined in deploy/ansible/inventory/vagrant and referenced
-# in the Vagrantfile
+# All variables defined here override those in group_vars/all, for the
+# purposes of developing and testing deployment in Vagrant.
 
 # Certain tasks should never be be run in a production environment. However,
 # they may be run in a development environment for convenience.
