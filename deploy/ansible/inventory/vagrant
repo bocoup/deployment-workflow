@@ -1,6 +1,6 @@
 # This inventory allows you to run playbooks granularly via ansible-playbook
 # instead of having to rely on the (rather limited) vagrant provision command.
-# The ansible_ssh_host value should match the host_vars/vagrant app_fqdn and
+# The ansible_ssh_host value should match the host_vars/vagrant site_fqdn and
 # Vagrantfile config.hostsupdater.aliases settings.
 
 vagrant ansible_ssh_host=deployment-workflow.loc

@@ -7,7 +7,7 @@
 # locally, in Vagrant. But not in production!
 env: production
 
-# This var is referenced by a few other vars, eg. git_repo, hostname, app_fqdn.
+# This var is referenced by a few other vars, eg. git_repo, hostname, site_fqdn.
 project_name: deployment-workflow
 
 # This is what you'll see at the bash prompt if/when you ssh into your server.
@@ -17,7 +17,7 @@ hostname: "{{project_name}}"
 # nginx checks this value against the URL being requested, it must be the same
 # as the server's DNS name. This value is overridden for Vagrant and staging
 # servers.
-app_fqdn: "{{project_name}}.bocoup.com"
+site_fqdn: "{{project_name}}.bocoup.com"
 
 ##############
 # PROVISIONING
@@ -78,7 +78,7 @@ shared:
   - {file: ssl_params, directory: "{{nginx_dir}}"}
   - {file: gzip_params, directory: "{{nginx_dir}}"}
 confs:
-  - {file: app.conf, directory: "{{conf_dir}}"}
+  - {file: site.conf, directory: "{{conf_dir}}"}
 
 #######
 # USERS
