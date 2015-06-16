@@ -25,3 +25,12 @@
     insertafter="^Defaults"
     line='Defaults\tenv_keep += "SSH_AUTH_SOCK"'
     validate="visudo -cf %s"
+
+- name: allow passwordless sudo - development only!
+  lineinfile:
+    dest=/etc/sudoers
+    state=present
+    regexp="^%sudo"
+    line="%sudo	ALL=(ALL:ALL) NOPASSWD:ALL"
+    validate="visudo -cf %s"
+  when: env == "development"
