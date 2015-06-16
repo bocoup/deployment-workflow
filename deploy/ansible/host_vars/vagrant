@@ -1,8 +1,9 @@
 # All variables defined here override those in group_vars/all, for the
 # purposes of developing and testing deployment in Vagrant.
 
-# Certain tasks should never be be run in a production environment. However,
-# they may be run in a development environment for convenience.
+# Certain tasks may operate in a less secure (but more convenient) manner, eg.
+# enabling passwordless sudo or generating self-signed ssl certs, when testing
+# locally, in Vagrant. But not in production!
 env: development
 
 # Vagrant box synced folder. This should match the config.vm.synced_folder
@@ -10,8 +11,9 @@ env: development
 # clone_path or public_path vars.
 synced_folder: "{{base_path}}/vagrant"
 
-# Vagrant box hostname and FQDN. The app_fqdn setting should match the
-# config.hostsupdater.aliases setting in the Vagrantfile.
+# Vagrant box hostname and FQDN. The app_fqdn setting should match the vagrant
+# inventory ansible_ssh_host and Vagrantfile config.hostsupdater.aliases
+# settings.
 hostname: ansible-vagrant
 app_fqdn: "{{project_name}}.loc"
 

@@ -1,4 +1,7 @@
-# Run the link role.
+# Link the local project directory into the Vagrant box, allowing local changes
+# to be previewed there immediately. Note that when linked, any building will
+# need to be done at the local command line, and not via playbook. Running this
+# playbook in Vagrant will override the deploy playbook, and vice-versa.
 
 - hosts: vagrant
   sudo: yes
