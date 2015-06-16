@@ -15,6 +15,7 @@
     "grunt-contrib-clean": "^0.6.0",
     "grunt-contrib-copy": "^0.8.0",
     "grunt-contrib-watch": "^0.6.1",
-    "grunt-markdown": "^0.7.0"
+    "grunt-markdown": "^0.7.0",
+    "js-yaml": "^3.3.1"
   }
 }
