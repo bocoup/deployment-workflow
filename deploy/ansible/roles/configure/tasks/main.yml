@@ -8,7 +8,7 @@
   lineinfile:
     dest=/etc/hosts
     state=present
-    line="127.0.0.1 {{hostname}} {{app_fqdn}}"
+    line="127.0.0.1 {{hostname}} {{site_fqdn}}"
 
 - name: disallow password authentication
   lineinfile:

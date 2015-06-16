@@ -11,11 +11,11 @@ env: development
 # clone_path or public_path vars.
 synced_folder: "/mnt/vagrant"
 
-# Vagrant box hostname and FQDN. The app_fqdn setting should match the vagrant
+# Vagrant box hostname and FQDN. The site_fqdn setting should match the vagrant
 # inventory ansible_ssh_host and Vagrantfile config.hostsupdater.aliases
 # settings.
 hostname: ansible-vagrant
-app_fqdn: "{{project_name}}.loc"
+site_fqdn: "{{project_name}}.loc"
 
 # Should the nginx server use HTTPS instead of HTTP?
 ssl: false
