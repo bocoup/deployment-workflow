@@ -1,5 +1,5 @@
 # Ensure all users have been added, along with any public keys. If any users'
-# state=absent, they will be removed. If any keys are removed, they will be
+# state is "absent", they will be removed. If any keys are removed, they will be
 # deleted.
 
 - name: ensure users are synced

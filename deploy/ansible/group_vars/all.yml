@@ -2,8 +2,9 @@
 # PROJECT
 #########
 
-# Certain tasks should never be be run in a production environment. However,
-# they may be run in a development environment for convenience.
+# Certain tasks may operate in a less secure (but more convenient) manner, eg.
+# enabling passwordless sudo or generating self-signed ssl certs, when testing
+# locally, in Vagrant. But not in production!
 env: production
 
 # This var is referenced by a few other vars, eg. git_repo, hostname, app_fqdn.
@@ -107,9 +108,9 @@ confs:
 # openssl passwd -1 -salt $(openssl rand -base64 6) yourpassword
 #
 # ===================== VERY IMPORTANT NOTE, PLEASE READ =====================
-# When creating a new project from the deployment workflow, PLEASE REPLACE THE
-# USERS HERE WITH YOUR OWN USERS. If you leave these users, we'll all have
-# access to your servers, which is something we really don't want.
+# When creating a new project using this workflow, REPLACE THE DEFAULT USERS
+# WITH YOUR OWN USERS. If you leave the default users, we'll all have access to
+# your servers, which is something we really don't want.
 # ============================================================================
 #
 # If you have no users to define here, set users to an empty array, like:
