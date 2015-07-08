@@ -1,7 +1,7 @@
 # Clone, build, and deploy, restarting nginx if necessary. This playbook must
 # be run after provision and configure, and is used to deploy and build the
 # specified commit (overridable via extra vars) on the server. Running this
-# playbook in Vagrant will override the link playbook, and vice-versa.
+# playbook in Vagrant will override the vagrant-link playbook, and vice-versa.
 
 - hosts: all
   sudo: yes

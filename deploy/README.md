@@ -207,7 +207,7 @@ The following playbooks are included in this workflow:
 * [provision playbook](#provision-playbook)
 * [configure playbook](#configure-playbook)
 * [deploy playbook](#deploy-playbook)
-* [link playbook](#link-playbook)
+* [vagrant-link playbook](#vagrant-link-playbook)
 * [init playbook](#init-playbook)
 
 For more detailed information on what each playbook actually does and how it
@@ -239,12 +239,12 @@ and setup long-running processes like nginx, postgres, etc.
 Clone, build, and deploy, restarting nginx if necessary. This playbook must
 be run after `provision` and `configure`, and is used to deploy and build the
 specified commit (overridable via extra vars) on the server. Running this
-playbook in Vagrant will override the `link` playbook, and vice-versa.
+playbook in Vagrant will override the `vagrant-link` playbook, and vice-versa.
 
 * Playbook: [ansible/deploy.yml](ansible/deploy.yml)
 * Roles: [deploy](#deploy-role)
 
-#### link playbook
+#### vagrant-link playbook
 
 Instead of cloning the Git repo and building like the `deploy` playbook, this
 playbook links your local working project directory into the Vagrant box so that
@@ -253,13 +253,13 @@ while developing. While in this mode, all building will have to be done
 manually, at the command line of your development machine. Running this playbook
 will override the `deploy` playbook, and vice-versa.
 
-* Playbook: [ansible/link.yml](ansible/link.yml)
+* Playbook: [ansible/vagrant-link.yml](ansible/vagrant-link.yml)
 
 #### init playbook
 
 This playbook saves the trouble of running the `provision`, `configure` and
-`link` playbooks individually, and is provided for convenience. After `vagrant
-up`, this playbook will be run on the new Vagrant box.
+`vagrant-link` playbooks individually, and is provided for convenience. After
+`vagrant up`, this playbook will be run on the new Vagrant box.
 
 * Playbook: [ansible/init.yml](ansible/init.yml)
 
@@ -615,5 +615,5 @@ $ ./deploy/run-playbook.sh deploy vagrant commit=my-feature local=true
 # to be previewed there immediately. This is run automatically at the end of
 # "vagrant up".
 
-$ ./deploy/run-playbook.sh link vagrant
+$ ./deploy/run-playbook.sh vagrant-link vagrant
 ```
