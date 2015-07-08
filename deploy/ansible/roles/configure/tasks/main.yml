@@ -6,47 +6,47 @@
 
 - name: add loopback references to our domain in /etc/hosts
   lineinfile:
-    dest=/etc/hosts
-    state=present
-    line="127.0.0.1 {{hostname}} {{site_fqdn}}"
+    dest: /etc/hosts
+    state: present
+    line: 127.0.0.1 {{hostname}} {{site_fqdn}}
 
 - name: disallow password authentication
   lineinfile:
-    dest=/etc/ssh/sshd_config
-    state=present
-    regexp="^PasswordAuthentication"
-    line="PasswordAuthentication no"
+    dest: /etc/ssh/sshd_config
+    state: present
+    regexp: ^PasswordAuthentication
+    line: PasswordAuthentication no
   notify: restart sshd
 
 - name: disallow challenge response authentication
   lineinfile:
-    dest=/etc/ssh/sshd_config
-    state=present
-    regexp="^ChallengeResponseAuthentication"
-    line="ChallengeResponseAuthentication no"
+    dest: /etc/ssh/sshd_config
+    state: present
+    regexp: ^ChallengeResponseAuthentication
+    line: ChallengeResponseAuthentication no
   notify: restart sshd
 
 - name: ensure github.com is a known host
   lineinfile:
-    dest=/etc/ssh/ssh_known_hosts
-    state=present
-    create=yes
-    regexp="^github\\.com"
-    line="{{ lookup('pipe', 'ssh-keyscan -t rsa github.com') }}"
+    dest: /etc/ssh/ssh_known_hosts
+    state: present
+    create: yes
+    regexp: ^github\.com
+    line: "{{ lookup('pipe', 'ssh-keyscan -t rsa github.com') }}"
 
 - name: ensure ssh agent socket environment variable persists when sudoing
   lineinfile:
-    dest=/etc/sudoers
-    state=present
-    insertafter="^Defaults"
-    line='Defaults\tenv_keep += "SSH_AUTH_SOCK"'
-    validate="visudo -cf %s"
+    dest: /etc/sudoers
+    state: present
+    insertafter: ^Defaults
+    line: 'Defaults\tenv_keep += "SSH_AUTH_SOCK"'
+    validate: visudo -cf %s
 
 - name: allow passwordless sudo - development only!
   lineinfile:
-    dest=/etc/sudoers
-    state=present
-    regexp="^%sudo"
-    line="%sudo	ALL=(ALL:ALL) NOPASSWD:ALL"
-    validate="visudo -cf %s"
+    dest: /etc/sudoers
+    state: present
+    regexp: ^%sudo
+    line: "%sudo\tALL=(ALL:ALL) NOPASSWD:ALL"
+    validate: visudo -cf %s
   when: env == "development"
