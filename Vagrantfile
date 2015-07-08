@@ -7,17 +7,15 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = 'ubuntu/trusty64'
 
   # Allow the project directory to be accessible inside the Vagrant box.
-  # This should match the synced_folder setting specified in the ansible
-  # "localdev" config.
+  # This should match the Ansible host_vars/vagrant synced_folder value.
   config.vm.synced_folder '.', '/mnt/vagrant'
 
   # Ideally, this IP will be unique, so the entry added to /etc/hosts won't
   # conflict with that of another project.
   config.vm.network :private_network, ip: '192.168.33.99'
 
-  # Automatically add an entry to /etc/hosts for this Vagrant box. This
-  # requires sudo. This should match the app_fqdn setting specified in the
-  # ansible "localdev" config.
+  # Automatically add an entry to /etc/hosts for this Vagrant box (requires
+  # sudo). This should match the Ansible host_vars/vagrant site_fqdn value.
   config.hostsupdater.aliases = ['deployment-workflow.loc']
 
   # A specific name looks much better than "default" in ansible output.
