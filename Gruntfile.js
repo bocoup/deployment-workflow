@@ -1,5 +1,6 @@
 var path = require('path');
 var yaml = require('js-yaml');
+var revision = require('git-rev');
 
 module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-markdown');
@@ -8,7 +9,16 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
 
   var githubUrl = 'https://github.com/bocoup/deployment-workflow/';
-  var branch = 'twenty';
+  var branch;
+
+  grunt.registerTask('get_branch', 'Get current Git branch', function() {
+    var done = this.async();
+    revision.branch(function(name) {
+      grunt.log.writeln('Current branch is ' + name + '.');
+      branch = name;
+      done();
+    });
+  });
 
   // Handle <!--foo bar baz--> "templates"
   var processTemplates = function(methods) {
@@ -162,7 +172,7 @@ module.exports = function(grunt) {
     },
   });
 
-  grunt.registerTask('build', ['clean', 'copy', 'markdown']);
+  grunt.registerTask('build', ['clean', 'copy', 'get_branch', 'markdown']);
   grunt.registerTask('dev', ['build', 'watch']);
   grunt.registerTask('default', ['build']);
 };

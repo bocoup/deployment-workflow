@@ -26,7 +26,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # ansible-playbook (like in production), but adding this code saves the
   # trouble of having to run ansible-playbook manually after "vagrant up".
   config.vm.provision 'ansible' do |ansible|
-    # Run init playbook (which runs base, configure, link playbooks).
+    # Run init playbook (which runs base, configure, vagrant-link playbooks).
     ansible.playbook = 'deploy/ansible/init.yml'
   end
 end

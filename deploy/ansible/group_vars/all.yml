@@ -109,6 +109,19 @@ users:
     shadow_pass: $1$v2zFSFYZ$UE4SWvZNRCSp9tewVFAe8/
     public_keys:
       - ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAtUUvs69wWAwb2bos+hCOgMlEZcivoniUSDYn4PazXqdvr6GYj2B2nrLDMeTcpnpTC+43lMpWz19xGDGQ8QF86pf1zuUXBKxtUHuNBFJwkIKmjiw816GGEqASsz0dcqBALmSXOZrZ4+ekolL3ec1VnSyo4sBRYfa5du/FvWkCzlJEBISbzrpskJyXHOB5mC2k1J6aMnvLIBG6Z2OPaD37L3lMmgrDwiHkEsqoeQzUNYC+/68WH3i80YEkpjIaFQp06b2u5uA6jGwCjQAmcjMrzL/+4n33y9mD0cXCdVz6ivbr/wOxJHo8kCmMivMUeMkG538yWcPBWjW5bEcYG0BBdw== cowboy@cowbook
+  - name: matt
+    state: present
+    real_name: Matt Surabian
+    shadow_pass: $6$4LgnUzFP$cJd0iJSGP19TkFaCmwUkG5Ja2Nbt7mw66ZEC6MGkaLl62YgLLnqZduNTPwZQVHfr07huPHsZRg6SHLFcVdUtG1
+    public_keys:
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDBYemFqMxRb6pih7ttNmKjx5pGpGmuxbYKSqBAs+BFgdHtFtnIi4N9u7/mEjmJCvS6C5GvEb5sM5JQakISAtUEW5ah1LmlyhaVGvfz+YGM95LwMy+OThSPc5gZYA6Xv61ykADvnStHPmCdFmpSH/y5UiT6UPUh/Wn0y5P0hyj1wyNqd34cUfCWbEuFO8rpMdi5h2sPl9/bcgAcAt3iyZIz8yo29q457r8UYNkbk+kIp81++bMh7/ikPmad4YLulXTm8zYFZeI7EDwGl4WKuC+c7cjtA4IWN54IqeO8BOkOwFOGoRE6ddI+w+WM4+tAn+g0vL+DJTq/dgs8dl57o84b matt@mattsurabian.com
+  - name: tkellen
+    state: present
+    real_name: Tyler Kellen
+    shadow_pass: $1$SLUJWFxu$Zrq6t39fbas7duavaPLKb.
+    public_keys:
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDASWvJsFUg1ONxaV64PSaZg9dM5xhml+oeSfetRHMeO+JtzLodFgLu+wc5UED29xYf0I7/jDPaQQFu8gEs7x6A91unjR2mZzpx4du+NrNpwj+TGTNEdf6VmbneKu/RqCxTLXvkga4DJ4uXpUfL97u6sEMZDKr1uDYjH1CXR9yhGmRnsVw0UDIbOUD9rw5ociqMSwlW362XDNJh+yRSeG80cyAYDU0YXopMc8jIzoJ8j6qVdawvnBoVUswGvjRHQbTaKNqp+tyhGKFQGdPzoSubtJ8pt6g7tldkLuxphqQ5/m5q/rb74BU48laGvl5ssigEfY2tuqN9jG35zIVJxo3J tyler@sleekcode.net
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCUpQGw83rF9wV3/0H7TJAmADHJEFJcUhvveYhflvnvBY+aunLj2hYEwdtzI/Zf4sZgDn+IdEbk5QAdmxAURPrT0rTF3SFvs/86aLaBR/UZK3ABRqqGBhP6HqaEOwGv5AnHkByMd6KB9tzpFmpmI+tkSvw0flKIA38lNO2ULd0Y+MGFvAcJ5EvLfK0fiEXyj4dh9t2gsG4cL/QPa5IydTbCmhsJkzpFxMBnghNrvoqN7r1T14meFb/PWSC2LTTR5kh5F6y4GaDBljLkwReFHr2KhzNEG3EgexzhZtDxfWR5jMXZbkkyLJZLkz/BT4EFxQe3yl0Ps0oNgFGkXNkNrvyV tyler@sleekcode.net
 
 ########
 # DEPLOY
