@@ -1,5 +1,4 @@
-# Specify production app servers here. Once provisioning and deployment have
-# been tested locally or in staging, make changes "live" here.
+# Specify your production app server here. This should match the ansible
+# group_vars/all site_fqdn setting.
 
-[appservers]
 deployment-workflow.bocoup.com

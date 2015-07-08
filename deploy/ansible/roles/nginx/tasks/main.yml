@@ -30,19 +30,19 @@
   ignore_errors: yes
   register: nginx_test_valid
   changed_when: false
-  when: nginx_conf|changed
+  when: nginx_conf | changed
 
 - name: remove temporary backups if new nginx config files are valid
   file: path={{item.directory}}/{{item.file}}.backup state=absent
   with_items: confs + shared
-  when: nginx_test_valid|success
+  when: nginx_test_valid | success
 
 - name: restore temporary backups if new nginx config files are invalid
   shell: mv {{item.file}}.backup {{item.file}}
   args:
     chdir: "{{item.directory}}"
   with_items: confs
-  when: nginx_test_valid|failed
+  when: nginx_test_valid | failed
 
 - fail: msg="nginx config is invalid"
-  when: nginx_test_valid|failed
+  when: nginx_test_valid | failed

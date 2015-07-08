@@ -1,0 +1,26 @@
+# All variables defined here override those in group_vars/all, for the
+# purposes of developing and testing deployment in Vagrant.
+
+# Certain tasks may operate in a less secure (but more convenient) manner, eg.
+# enabling passwordless sudo or generating self-signed ssl certs, when testing
+# locally, in Vagrant. But not in production!
+env: development
+
+# Vagrant box synced folder. This should match the config.vm.synced_folder
+# setting in the Vagrantfile, and should be different than the site_path,
+# clone_path or public_path vars.
+synced_folder: "{{base_path}}/vagrant"
+
+# Vagrant box hostname and FQDN. The site_fqdn setting should match the vagrant
+# inventory ansible_ssh_host and Vagrantfile config.hostsupdater.aliases
+# settings.
+hostname: ansible-vagrant
+site_fqdn: "{{project_name}}.loc"
+
+# Should the nginx server use HTTPS instead of HTTP?
+ssl: false
+
+# If ssl is enabled, these cert/key files will be used by nginx. Self-signed
+# cert/key files will be auto-generated if they don't already exist.
+ssl_cert_path: /etc/ssl/server.cert
+ssl_key_path: /etc/ssl/server.key

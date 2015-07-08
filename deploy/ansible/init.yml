@@ -1,0 +1,7 @@
+# This playbook saves the trouble of running each of the following playbooks
+# individually, and is provided for convenience. After "vagrant up", this
+# playbook will be run on the new Vagrant box.
+
+- include: provision.yml
+- include: configure.yml
+- include: link.yml

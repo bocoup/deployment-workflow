@@ -1,0 +1,8 @@
+# Instead of cloning the git repo and building like the "deploy" playbook, this
+# playbook links your local working project directory into the Vagrant box so
+# that you can instantly preview your local changes on the server, for
+# convenience while developing. While in this mode, all building will have to
+# be done manually, at the command line of your development machine.
+
+- name: link vagrant synced directory to make it live
+  file: path={{site_path}} state=link src={{synced_folder}} force=yes

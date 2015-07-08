@@ -7,7 +7,7 @@
   with_items: apt_keys
 
 - name: add ppas to apt
-  apt_repository: repo="{{item}}" update_cache=yes
+  apt_repository: repo="{{item}}" state=present update_cache=yes
   with_items: apt_ppas
 
 - name: install apt packages
@@ -18,5 +18,9 @@
   npm: name=npm state=latest global=yes
 
 - name: install global npm modules
-  npm: name={{item.name}} version={{item.version|default(omit)}} global=yes
+  npm:
+    name={{item.name}}
+    state=present
+    version={{ item.version | default(omit) }}
+    global=yes
   with_items: npm_global_modules
