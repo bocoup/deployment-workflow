@@ -246,13 +246,14 @@ playbook in Vagrant will override the `link` playbook, and vice-versa.
 
 #### link playbook
 
-Link the local project directory into the Vagrant box, allowing local changes
-to be previewed there immediately. Note that when linked, any building will
-need to be done at the local command line, and not via playbook. Running this
-playbook in Vagrant will override the `deploy` playbook, and vice-versa.
+Instead of cloning the Git repo and building like the `deploy` playbook, this
+playbook links your local working project directory into the Vagrant box so that
+you can instantly preview your local changes on the server, for convenience
+while developing. While in this mode, all building will have to be done
+manually, at the command line of your development machine. Running this playbook
+will override the `deploy` playbook, and vice-versa.
 
 * Playbook: [ansible/link.yml](ansible/link.yml)
-* Roles: [link](#link-role)
 
 #### init playbook
 
@@ -276,7 +277,6 @@ The following roles are used by this workflow's playbooks:
 * [nginx role](#nginx-role)
 * [users role](#users-role)
 * [deploy role](#deploy-role)
-* [link role](#link-role)
 
 #### base role
 
@@ -373,16 +373,6 @@ project's build process might need to be different than what's here, so adjust
 accordingly!
 
 <!--role-files deploy-->
-
-#### link role
-
-Instead of cloning the git repo and building like the `deploy` playbook, this
-playbook links your local working project directory into the Vagrant box so that
-you can instantly preview your local changes on the server while developing.
-While in this mode, all building will have to be done manually, either at the
-command line of your development machine or inside the Vagrant box.
-
-<!--role-files link-->
 
 ## Vagrant
 

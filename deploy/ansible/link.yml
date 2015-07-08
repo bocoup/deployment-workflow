@@ -1,11 +1,12 @@
-# Link the local project directory into the Vagrant box, allowing local changes
-# to be previewed there immediately. Note that when linked, any building will
-# need to be done at the local command line, and not via playbook. Running this
-# playbook in Vagrant will override the deploy playbook, and vice-versa.
+# Instead of cloning the Git repo and building like the "deploy" playbook, this
+# playbook links your local working project directory into the Vagrant box so
+# that you can instantly preview your local changes on the server, for
+# convenience while developing. While in this mode, all building will have to
+# be done manually, at the command line of your development machine. Running
+# this playbook will override the deploy playbook, and vice-versa.
 
 - hosts: vagrant
   sudo: yes
-  roles:
-    - {role: link, tags: link}
-  handlers:
-    - include: handlers/handlers.yml
+  tasks:
+    - name: link vagrant synced directory to make it live
+      file: path={{site_path}} state=link src={{synced_folder}} force=yes
