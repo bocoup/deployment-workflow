@@ -430,7 +430,7 @@ hostname alias defined in the [Vagrantfile](#configuring-vagrant). Eg, for this
 example project, the command would be `ssh deployment-workflow.loc`.
 
 Also, adding a [section like
-this](https://github.com/cowboy/dotfiles/blob/bb47c67/link/.ssh/config#L9-L14)
+this](https://github.com/cowboy/dotfiles/blob/8e4fa2a/link/.ssh/config#L9-L14)
 to your `~/.ssh/config` file will prevent SSH from storing Vagrant box keys in
 `~/.ssh/known_hosts` and complaining about them not matching when a Vagrant
 box is destroyed and recreated. _Do not do this for production servers. This is
