@@ -1,0 +1,16 @@
+# In development, create an account for the currently logged-in user, and
+# copy their public key to the server. This makes it possible to run other
+# playbooks without specifying a user or private key on the command line.
+
+- name: ensure local user is synced
+  user:
+    state: present
+    name: "{{ lookup('env', 'USER') }}"
+    shell: /bin/bash
+    groups: sudo
+  register: user
+
+- name: ensure the local user's public key is synced
+  authorized_key:
+    user: "{{user.name}}"
+    key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
