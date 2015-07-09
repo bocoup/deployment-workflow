@@ -3,6 +3,7 @@
 The files and directory you care about are:
 
 * [Vagrantfile](Vagrantfile)
+* [ansible.cfg](ansible.cfg)
 * [.gitignore](.gitignore)
 * [deploy/](deploy/)
 
@@ -15,4 +16,3 @@ homepage is deployed using the deployment workflow.
 
 If this is your first time here, you should start by reading [the
 documentation][home].
-

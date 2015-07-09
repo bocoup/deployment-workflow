@@ -44,7 +44,7 @@ Here are links to the official, original project home page, documentation, Git
 repository and wiki:
 
 * [Canonical home page & documentation](https://deployment-workflow.bocoup.com/)
-* [Canonical git repository](https://github.com/bocoup/deployment-workflow/)
+* [Canonical Git repository](https://github.com/bocoup/deployment-workflow/)
 * [Canonical wiki](https://github.com/bocoup/deployment-workflow/wiki)
 
 Notes:
