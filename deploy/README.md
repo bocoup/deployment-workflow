@@ -332,10 +332,15 @@ certificate warning before viewing it.
 
 #### users role
 
-Ensure all users have been added, along with any public keys. If any user's
-state is `absent`, they will be removed. If any keys are removed, they will be
-deleted. In a development environment, make sudo passwordless, for
-convenience.
+In development ([localuser.yml](ansible/roles/users/tasks/localuser.yml)),
+create an account for the currently logged-in user, and copy their public key to
+the server. This makes it possible to run other playbooks without specifying a
+user or private key on the command line.
+
+In production ([users.yml](ansible/roles/users/tasks/users.yml)), ensure all
+users have been added, along with any public keys. If any user's state is
+`absent`, they will be removed. If any keys are removed, they will be deleted.
+In a development environment, make sudo passwordless, for convenience.
 
 User accounts, passwords and public keys can be configured in the `USERS`
 section of the [global variables](#ansible-variables) file.

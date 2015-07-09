@@ -1,0 +1,19 @@
+# In production, ensure all users have been added, along with any public keys.
+# If any user's state is "absent", they will be removed. If any keys are
+# removed, they will be deleted.
+
+- name: ensure users are synced
+  user: name={{item.name}}
+    force=yes
+    remove=yes
+    password={{ item.shadow_pass | default(omit) }}
+    state={{ item.state | default(omit) }}
+    shell={{ item.shell | default("/bin/bash") }}
+    groups={{ item.groups | default("sudo") }}
+  with_items: users
+
+- name: ensure user public keys are synced
+  authorized_key: user={{item.name}} key="{{ item.public_keys | join('\n') }}"
+    state=present exclusive=yes
+  with_items: users
+  when: item.public_keys is defined and item.public_keys | length > 0
