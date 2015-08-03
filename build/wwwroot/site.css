@@ -6,6 +6,7 @@ html, body {
 }
 
 .markdown-body {
+  position: relative;
   background: #fff;
   max-width: 853px;
   border: 1px solid #aaa;
@@ -20,6 +21,25 @@ html, body {
 
 .markdown-body > h1:first-child {
   margin-top: 0.8em !important;
+}
+
+.client {
+  position: absolute; right: 1px;
+  height: 0;
+  font-size: 1.5em;
+}
+
+.client::before {
+  content: "•";
+}
+
+#count {
+  position: absolute; top: 0; right: 2px;
+  font-size: 0.8em; color: #aaa;
+}
+
+#count::before {
+  content: "Viewing: ";
 }
 
 #footer {
