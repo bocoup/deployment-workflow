@@ -37,3 +37,9 @@
   args:
     chdir: "{{base_path}}"
   when: keep_n_most_recent is defined
+
+- name: ensure node_server upstart script is installed
+  template: src=node_server.conf dest=/etc/init
+
+- name: restart node_server
+  service: name=node_server state=restarted
