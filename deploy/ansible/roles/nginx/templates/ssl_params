@@ -1,4 +1,3 @@
-ssl on;
 ssl_certificate_key {{ssl_key_path}};
 ssl_certificate {{ssl_cert_path}};
 
