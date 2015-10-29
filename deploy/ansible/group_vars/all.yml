@@ -127,9 +127,6 @@ users:
 # DEPLOY
 ########
 
-# Git repo address.
-git_repo: git@github.com:bocoup/{{project_name}}.git
-
 # Parent directory for cloned repository directories. The clone_path and
 # site_path should be children of this directory.
 base_path: /mnt
@@ -155,9 +152,15 @@ build_info_path: "public/build.txt"
 # DEPLOY EXTRA VARS
 ###################
 
+# Specify any valid remote (typically a github user)
+remote: bocoup
+
 # Specify any ref (eg. branch, tag, SHA) to be deployed. This ref must be
 # pushed to the remote git_repo before it can be deployed.
 commit: master
+
+# Git repo address.
+git_repo: git@github.com:{{remote}}/{{project_name}}.git
 
 # Clone and build the specified commit SHA, regardless of prior build status.
 force: false
