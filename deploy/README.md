@@ -367,6 +367,7 @@ file may be overridden on the `ansible-playbook` command line in the format
 
 var      | default  | description
 ---------|----------|------------
+`remote` | `bocoup` | Specify any remote (typically a github user).
 `commit` | `master` | Specify any ref (eg. branch, tag, SHA) to be deployed. This ref must be pushed to the remote `git_repo` before it can be deployed.
 `force`  | `false`  | Clone and build the specified commit SHA, regardless of prior build status.
 `local`  | `false`  | Use the local project Git repo instead of the remote `git_repo`. This option only works with the `vagrant` inventory, and not with `staging` or `production`.
