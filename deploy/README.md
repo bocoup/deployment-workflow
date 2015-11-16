@@ -49,7 +49,7 @@ repository and wiki:
 
 Notes:
 
-* Even though Node.js, npm and Bower are used in this sample project, with minor
+* Even though Node.js and npm are used in this sample project, with minor
   edits this workflow can be made to work with basically any programming
   language, package manager, etc.
 * This workflow won't teach you how to create an AWS instance. Fortunately,
@@ -374,9 +374,8 @@ var      | default  | description
 
 The [build.yml](ansible/roles/deploy/tasks/build.yml) file contains all the
 build tasks that need to be run after your project is cloned, eg. `npm install`,
-`bower install`, `npm run build`. Don't be afraid to modify these tasks. Your
-project's build process might need to be different than what's here, so adjust
-accordingly!
+`npm run build`. Don't be afraid to modify these tasks. Your project's build
+process might need to be different than what's here, so adjust accordingly!
 
 <!--role-files deploy-->
 

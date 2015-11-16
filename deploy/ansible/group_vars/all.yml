@@ -44,11 +44,6 @@ apt_packages:
   - git
   - nodejs
 
-# Any npm global modules to install. Npm module versions may be specified like
-# - {name: bower, version: 1.2.3}
-npm_global_modules:
-  - {name: bower}
-
 ############
 # WEB SERVER
 ############
