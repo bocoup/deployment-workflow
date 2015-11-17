@@ -165,7 +165,7 @@ h2 {
 }
 
 .post-body li {
-  padding: .4em 0;
+  padding: 0 0 0.8em;
   line-height: 1.4em;
   position: relative;
 }
@@ -179,6 +179,15 @@ h2 {
   position: absolute;
   left: -1.25em;
   width: .75em;
+}
+
+.post-body ul, .post-body ol {
+  padding: 0 0 0 2.4em;
+  margin: 0.8em 0 0 0;
+}
+
+.post-body li li:last-child {
+  padding-bottom: 0;
 }
 
 .post-body li p:first-of-type {
