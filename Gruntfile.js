@@ -128,10 +128,6 @@ module.exports = function(grunt) {
         cwd: 'build/wwwroot',
         src: '**/*',
         dest: 'public',
-      },
-      'github-markdown-css': {
-        src: 'bower_components/github-markdown-css/github-markdown.css',
-        dest: 'public/github-markdown.css',
       }
     },
     markdown: {

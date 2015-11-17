@@ -7,11 +7,6 @@
 - name: install npm modules
   npm: path="{{clone_path}}"
 
-- name: install bower modules
-  command: bower install --allow-root
-  args:
-    chdir: "{{clone_path}}"
-
 - name: build production version
   shell: npm run build
   args:
