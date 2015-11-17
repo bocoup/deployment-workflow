@@ -1,5 +1,7 @@
 # Modern Web Deployment Workflow
 
+<div class="by-bocoup">Brought to you by <a href="https://bocoup.com/"><img src="bocoup.png" width="100px"></a></div>
+
 This collection of Ansible playbooks have been designed to simplify deployment
 of a modern website or web app using Vagrant, Ubuntu, nginx and HTTP/HTTPS. Many
 tasks have been separated into separate roles, and as much configuration as
