@@ -160,6 +160,7 @@ h2 {
 
 .post-body ul {
   list-style: none;
+  padding: .4em 2.4em;
 }
 
 .post-body li {
