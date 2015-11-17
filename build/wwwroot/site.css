@@ -217,10 +217,15 @@ h2 {
   padding: 1em 4.1em 1em 1.5em;
 }
 
+.post-body pre code {
+  padding: 0;
+}
+
 code {
   background: #f1f1f1;
   font-size: 1.1em;
   border-radius: 3px;
+  padding: 0 .35em;
 }
 
 @media( min-width: 40em ) {
