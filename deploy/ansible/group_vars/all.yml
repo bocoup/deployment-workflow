@@ -30,11 +30,10 @@ apt_keys:
 # Ppas to be added to apt. Useful ppas (replace trusty with your Ubuntu
 # version codename, if necessary):
 # Git latest:     ppa:git-core/ppa
-# Node.js 0.10.x: deb https://deb.nodesource.com/node_0.10 trusty main
-# Node.js 0.12.x: deb https://deb.nodesource.com/node_0.12 trusty main
-# Io.js 1.x:      deb https://deb.nodesource.com/iojs_1.x trusty main
+# Node.js 4.2.x (LTS): deb https://deb.nodesource.com/node_4.x trusty main
+# Node.js 5.x.x: deb https://deb.nodesource.com/node_5.x trusty main
 apt_ppas:
-  - "deb https://deb.nodesource.com/node_0.12 trusty main"
+  - "deb https://deb.nodesource.com/node_4.x trusty main"
   - "ppa:git-core/ppa"
 
 # Any apt packages to install. Apt package versions may be specified like
