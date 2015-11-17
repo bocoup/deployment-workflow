@@ -100,7 +100,7 @@ h2 {
   text-decoration: none;
   display: block;
   padding: .7em;
-  color: #24b4ca;
+  color: #3b3b3b;
   font-size: 1.1em;
   font-weight: 600;
 }
@@ -256,7 +256,7 @@ code {
 .col-inset { padding: 1em 3.7037037%; }
 
 @media( min-width: 35em ) {
-  .col-condensed { padding: 4.55555555% }
+  .col-condensed { padding: 6.55555555% 5% }
 }
 
 /*  Page Footer  */
@@ -332,7 +332,8 @@ code {
 }
 
 .markdown-body h1 {
-  margin: .5em 0 0;
+  margin: 0;
+  font-size: 2.2em;
 }
 
 .markdown-body h1 .octicon-link,
