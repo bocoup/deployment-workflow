@@ -17,7 +17,7 @@ homepage is deployed using the deployment workflow.
 If this is your first time here, you should start by reading [the
 documentation][home].
 
-## Developing the [project homepage][home]
+## Developing the project homepage
 
 This assumes that the [deployment workflow
 dependencies](https://deployment-workflow.bocoup.com/#dependencies) as well as
@@ -43,3 +43,5 @@ With vagrant, which more accurately reflects site behavior once deployed:
 1. Check the 404 page: <http://deployment-workflow.loc/whoops>
 1. Edit `build/*` and `deploy/README.md` files locally, pages should auto-reload
 1. Repeat steps 4-6
+
+When done, file a PR!
