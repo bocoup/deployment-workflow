@@ -1,6 +1,7 @@
 var path = require('path');
 var yaml = require('js-yaml');
 var revision = require('git-rev');
+var toc = require('toc');
 
 module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-markdown');
@@ -106,6 +107,21 @@ module.exports = function(grunt) {
     [/(<h\d id=")([^"]+)([^>]+>)/g, function(src, all, pre, id, post) {
       return pre + id + post + '<a class="anchor" aria-hidden="true" href="#' + id + '"><span class="octicon octicon-link"></span></a>';
     }],
+    [/(.*)/, function(html) {
+      var headers = toc.anchorize(html, {
+        tocMin: 2,
+        tocMax: 3,
+      }).headers;
+      var nav = toc.toc(headers, {
+        TOC: '<%= toc %>',
+        openUL: '<ul>',
+        closeUL: '</ul>',
+        openLI: '<li><a class="nav<%= level-1 %>" href="#<%= anchor %>"><%= text %><span></span></a>',
+        closeLI: '</li>',
+      });
+      templateContext.nav = nav;
+      return html;
+    }],
     // Footer
     [/$/, function() {
       return '<div id=footer>' +
@@ -118,6 +134,7 @@ module.exports = function(grunt) {
     }],
   ];
 
+  var templateContext;
   grunt.initConfig({
     clean: {
       all: 'public',
@@ -133,6 +150,12 @@ module.exports = function(grunt) {
     markdown: {
       options: {
         template: 'build/index.html',
+        templateContext: function() {
+          templateContext = {
+            nav: '',
+          };
+          return templateContext;
+        },
       },
       readme: {
         options: {

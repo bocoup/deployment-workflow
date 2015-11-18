@@ -111,15 +111,15 @@ h2 {
   color: #d71818;
 }
 
-.chevron {
+.nav ul .nav1 span {
   color: #D6D6D6;
 }
 
-.nav ul a:hover .chevron {
+.nav ul .nav1:hover span {
   color: #d71818;
 }
 
-.chevron::before {
+.nav ul .nav1 span::before {
   border-style: solid;
   border-width: 0.20em 0.20em 0 0;
   content: '';
@@ -131,7 +131,7 @@ h2 {
   float: right;
 }
 
-.chevron.right:before {
+.nav ul .nav1 span:before {
   transform: rotate(45deg);
 }
 
