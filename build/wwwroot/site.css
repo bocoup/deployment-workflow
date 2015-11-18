@@ -11,7 +11,7 @@
 html, body {
   margin: 0;
   padding: 0;
-  background: #f1f1f1;  
+  background: #f1f1f1;
 }
 
 html {
@@ -67,7 +67,7 @@ a:active {
   bottom: -1px;
 }
 
-h1, h2, h3, h4 {
+h1, h2, h3, h4, .nav ul a, .by-bocoup {
   font-family: "Open Sans";
 }
 
@@ -75,12 +75,80 @@ h2 {
   font-size: 1.5em;
   line-height: 1.2;
   margin: .25em 0 0;
+      border-bottom: 1px solid #D6D6D6;
+    padding-bottom: .5em;
 }
 
+.by-bocoup {
+  margin-bottom: 2em;
+  font-size: 1.1em;
+}
+
+.nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nav ul li .nav1 {
+  border-bottom: 1px solid #D6D6D6;
+}
+
+.nav ul a.nav1 {
+  text-decoration: none;
+  display: block;
+  padding: 1em .7em;
+  color: #3b3b3b;
+  font-size: 1.1em;
+  font-weight: 800;
+}
+
+.nav ul ul {
+  display: none
+}
+
+.nav ul a:hover {
+  color: #d71818;
+}
+
+.nav ul .nav1 span {
+  color: #D6D6D6;
+}
+
+.nav ul .nav1:hover span {
+  color: #d71818;
+}
+
+.nav ul .nav1 span::before {
+  border-style: solid;
+  border-width: 0.20em 0.20em 0 0;
+  content: '';
+  height: 0.35em;
+  position: relative;
+  top: 0.45em;
+  transform: rotate(-45deg);
+  width: 0.35em;
+  float: right;
+}
+
+.nav ul .nav1 span:before {
+  transform: rotate(45deg);
+}
+
+.nav p {
+  font-size: .8em;
+  margin: 1.5em 1em;
+  line-height: 1.5;
+}
+
+.by-bocoup img {
+  vertical-align: bottom;
+  margin-left: .2em;
+}
 
 /* General Post Content */
 
-.post-body {
+.post-body, .nav p {
   font-family: Georgia,serif;
 }
 
@@ -99,10 +167,11 @@ h2 {
 
 .post-body ul {
   list-style: none;
+  padding: .4em 2.4em;
 }
 
 .post-body li {
-  padding: .4em 0;
+  padding: 0 0 0.8em;
   line-height: 1.4em;
   position: relative;
 }
@@ -116,6 +185,15 @@ h2 {
   position: absolute;
   left: -1.25em;
   width: .75em;
+}
+
+.post-body ul, .post-body ol {
+  padding: 0 0 0 2.4em;
+  margin: 0.8em 0 0 0;
+}
+
+.post-body li li:last-child {
+  padding-bottom: 0;
 }
 
 .post-body li p:first-of-type {
@@ -155,52 +233,51 @@ h2 {
   padding: 1em 4.1em 1em 1.5em;
 }
 
+.post-body pre code {
+  padding: 0;
+}
+
 code {
   background: #f1f1f1;
   font-size: 1.1em;
-  padding: 0 .35em;
   border-radius: 3px;
+  padding: 0 .35em;
+}
+
+@media( min-width: 50em ) {
+  .nav {
+    float: left;
+    width: 25%;
+  }
+  .nav + .post-body {
+    float: right;
+    width: 70%;
+  }
+  .nav ul ul {
+    display: block;
+    background: #F7F7F7;
+    padding: .3em 0;
+  }
+
+  .nav ul ul a {
+    text-decoration: none;
+    display: block;
+    padding: .5em;
+    color: #3b3b3b;
+    font-size: 1em;
+    padding-left: .9em;
+  }
 }
 
 
 /* Column Styles */
-
-.col {
-  margin: 0 auto;
-  clear: both;
-  padding: 5.55555555% 3.7037037%;
-}
 
 .col-condensed {
   clear: both;
   padding: 7.4074074%;
 }
 
-.col-midwidth {
-  background: #fff;
-  clear: both;
-  margin: 0 auto;
-}
-
-.col-fullwidth {
-  clear: both;
-  width: 100%;
-}
-
-.col-inset-static {
-  padding: 0 4.444444%;
-}
-
-.col-centered {
-  text-align: center;
-  margin: 0 auto;
-}
-
-.col:after,
-.col-condensed:after,
-.col-midwidth:after,
-.col-inset:after,
-.col-fullwidth:after {
+.col-condensed:after {
   content: "";
   clear: both;
   display: table;
@@ -209,29 +286,8 @@ code {
 .col-inset { padding: 1em 3.7037037%; }
 
 @media( min-width: 35em ) {
-  .col           { padding: 3.7037037% 7.4074074%; }
-  .col-inset     { padding: 2em 11.1111111%; }
-  .col-condensed { padding: 5.55555555% 11.1111111%; }
+  .col-condensed { padding: 6.55555555% 5% }
 }
-
-@media( min-width: 60em ) {
-  .col           { padding: 3.7037037%; }
-  .col-inset     { padding: 2.5em 22.222222%; }
-  .col-midwidth  { padding: 3.7037037% 7.4074074%; }
-  .col-condensed { padding: 5.55555555% 14.8148148%; }
-}
-
-@media( min-width: 70em ) {
-  .col           { padding: 3.7037037%; }
-  .col-inset     { padding: 2.5em 14.8148148%; }
-  .col-midwidth  { padding: 3.7037037% 7.4074074%; }
-  .col-condensed { padding: 5.55555555% 18.5185185%; }
-}
-
-@media( min-width: 85em ) {
-        .col-condensed { padding: 5.55555555% 14.8148148%; }
-}
-
 
 /*  Page Footer  */
 
@@ -299,10 +355,15 @@ code {
 .markdown-body h3,
 .markdown-body h4 {
   position: relative;
-  margin-top: 1em;
+  margin-top: 2em;
   margin-bottom: 16px;
   font-weight: bold;
   line-height: 1.4;
+}
+
+.markdown-body h1 {
+  margin-top: 0;
+  font-size: 2.2em;
 }
 
 .markdown-body h1 .octicon-link,
@@ -314,8 +375,8 @@ code {
   vertical-align: middle;
 }
 
-.markdown-body h1 .anchor, 
-.markdown-body h2 .anchor, 
+.markdown-body h1 .anchor,
+.markdown-body h2 .anchor,
 .markdown-body h3 .anchor,
 .markdown-body h4 .anchor {
   line-height: 1.2em;
@@ -335,4 +396,10 @@ code {
 .markdown-body h3:hover .anchor .octicon-link,
 .markdown-body h4:hover .anchor .octicon-link  {
   display: inline-block;
+}
+
+@media( max-width: 50em ) {
+  .nav {
+    margin-bottom: 2em;
+  }
 }

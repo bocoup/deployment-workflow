@@ -9,11 +9,20 @@
 </head>
 <body>
 <div class="col-fullwidth markdown-body">
+
   <div class="col-condensed">
-    <div class="post-body blog-content">
+    <% if (nav) { %>
+    <div class="nav">
+      <%=nav%>
+      <p>Get the source at <a href="<%=githubUrl%>">GitHub</a>.<br>
+      Last updated on <%=date%>.</p>
+    </div>
+    <% } %>
+    <div class="post-body">
       <%=content%>
     </div>
   </div>
+
 </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
