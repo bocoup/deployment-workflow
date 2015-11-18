@@ -249,7 +249,7 @@ code {
     float: left;
     width: 25%;
   }
-  .post-body {
+  .nav + .post-body {
     float: right;
     width: 70%;
   }
@@ -267,7 +267,6 @@ code {
     font-size: 1em;
     padding-left: .9em;
   }
-
 }
 
 
@@ -363,6 +362,7 @@ code {
 }
 
 .markdown-body h1 {
+  margin-top: 0;
   font-size: 2.2em;
 }
 
@@ -398,8 +398,8 @@ code {
   display: inline-block;
 }
 
-@media( min-width: 50em ) {
-  .markdown-body h1 {
-    margin: 0;
+@media( max-width: 50em ) {
+  .nav {
+    margin-bottom: 2em;
   }
 }
