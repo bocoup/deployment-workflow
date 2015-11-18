@@ -30,7 +30,7 @@
 
       <p>Get the source at <a href="<%=githubUrl%>">GitHub</a>.<br>
       Last updated on <%=date%>.</p>
-      
+
     </div>
     <% } %>
     <div class="post-body">
@@ -48,5 +48,8 @@
   ga('create', 'UA-61867051-1', 'auto');
   ga('send', 'pageview');
 </script>
+<% if (mode === 'dev') { %>
+<script src="http://localhost:35729/livereload.js?snipver=1"></script>
+<% } %>
 </body>
 </html>

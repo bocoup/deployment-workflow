@@ -21,6 +21,12 @@ module.exports = function(grunt) {
     });
   });
 
+  var mode = 'prod';
+
+  grunt.registerTask('mode', 'Set mode (dev or prod)', function(arg) {
+    mode = arg;
+  });
+
   // Handle <!--foo bar baz--> "templates"
   var processTemplates = function(methods) {
     return [/<!--\s*(\S+)\s*(.*?)\s*-->/g, function(src, all, method, args) {
@@ -142,6 +148,7 @@ module.exports = function(grunt) {
         template: 'build/index.html',
         templateContext: function() {
           templateContext = {
+            mode: mode,
             nav: '',
             githubUrl: githubUrl,
             date: (new Date).toDateString(),
@@ -174,16 +181,20 @@ module.exports = function(grunt) {
     },
     watch: {
       readme: {
+        options: {
+          livereload: true,
+        },
         files: [
           'deploy/README.md',
           'build/**',
         ],
-        tasks: ['default']
+        tasks: ['build-dev']
       },
     },
   });
 
   grunt.registerTask('build', ['clean', 'copy', 'get_branch', 'markdown']);
-  grunt.registerTask('dev', ['build', 'watch']);
-  grunt.registerTask('default', ['build']);
+  grunt.registerTask('build-dev', ['mode:dev', 'build']);
+  grunt.registerTask('dev', ['build-dev', 'watch']);
+  grunt.registerTask('default', ['dev']);
 };
