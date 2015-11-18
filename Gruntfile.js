@@ -122,16 +122,6 @@ module.exports = function(grunt) {
       templateContext.nav = nav;
       return html;
     }],
-    // Footer
-    [/$/, function() {
-      return '<div id=footer>' +
-        [
-          'Built with &lt;3 at <a href="http://bocoup.com/">Bocoup</a>',
-          'Get the source at <a href="' + githubUrl + '">GitHub</a>',
-          'Last updated on ' + (new Date).toDateString() + '.',
-        ].join(' • ') +
-        '</div>';
-    }],
   ];
 
   var templateContext;
@@ -153,6 +143,8 @@ module.exports = function(grunt) {
         templateContext: function() {
           templateContext = {
             nav: '',
+            githubUrl: githubUrl,
+            date: (new Date).toDateString(),
           };
           return templateContext;
         },

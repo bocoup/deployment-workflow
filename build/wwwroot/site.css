@@ -135,6 +135,12 @@ h2 {
   transform: rotate(45deg);
 }
 
+.nav p {
+  font-size: .8em;
+  margin: 1.5em 1em;
+  line-height: 1.5;
+}
+
 .by-bocoup img {
   vertical-align: bottom;
   margin-left: .2em;
@@ -142,7 +148,7 @@ h2 {
 
 /* General Post Content */
 
-.post-body {
+.post-body, .nav p {
   font-family: Georgia,serif;
 }
 
