@@ -4,6 +4,7 @@
   "description": "Modern Web Deployment Workflow",
   "main": "index.js",
   "scripts": {
+    "dev": "grunt dev",
     "build": "grunt build"
   },
   "author": "Bocoup",
