@@ -107,8 +107,8 @@ module.exports = function(grunt) {
     [/(<h\d id=")([^"]+)([^>]+>)/g, function(src, all, pre, id, post) {
       return pre + id + post + '<a class="anchor" aria-hidden="true" href="#' + id + '"><span class="octicon octicon-link"></span></a>';
     }],
-    [/(.*)/, function(html) {
-      var headers = toc.anchorize(html, {
+    [/^[\s\S]+$/, function(src, all) {
+      var headers = toc.anchorize(all, {
         tocMin: 2,
         tocMax: 3,
       }).headers;
@@ -120,7 +120,7 @@ module.exports = function(grunt) {
         closeLI: '</li>',
       });
       templateContext.nav = nav;
-      return html;
+      return all;
     }],
   ];
 
