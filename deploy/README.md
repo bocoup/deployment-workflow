@@ -347,10 +347,6 @@ In a development environment, make sudo passwordless, for convenience.
 User accounts, passwords and public keys can be configured in the `USERS`
 section of the [global variables](#ansible-variables) file.
 
-**_When creating a new project using this workflow, REPLACE THE DEFAULT USERS
-WITH YOUR OWN USERS. If you leave the default users, we'll all have access to
-your servers, which is something we really don't want._**
-
 <!--role-files users-->
 
 #### deploy role
