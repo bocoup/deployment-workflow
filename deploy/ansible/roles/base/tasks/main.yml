@@ -2,16 +2,27 @@
 # or the project is cloned or built. All system dependencies should be
 # installed here.
 
+- name: ensure apt cache is updated
+  apt: update_cache=yes cache_valid_time=3600
+
+- name: ensure all packages are upgraded safely
+  apt: upgrade=safe
+  when: env != "development"
+
 - name: add keys to apt
   apt_key: url={{item}} state=present
   with_items: apt_keys
 
 - name: add ppas to apt
-  apt_repository: repo="{{item}}" state=present update_cache=yes
+  apt_repository:
+    repo: "{{item}}"
+    state: present
   with_items: apt_ppas
 
 - name: install apt packages
-  apt: name={{item}} state=latest update_cache=yes
+  apt:
+    name: {{item}}
+    state: latest
   with_items: apt_packages
 
 - name: update npm to latest

@@ -39,6 +39,7 @@ apt_ppas:
 # Any apt packages to install. Apt package versions may be specified like
 # - git=2.1.0
 apt_packages:
+  - unattended-upgrades
   - nginx
   - git
   - nodejs

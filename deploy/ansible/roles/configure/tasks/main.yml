@@ -4,6 +4,9 @@
 - name: set hostname
   hostname: name={{hostname}}
 
+- name: ensure unattended upgrades are configured
+  copy: src=10periodic dest=/etc/apt/apt.conf.d/
+
 - name: add loopback references to our domain in /etc/hosts
   lineinfile:
     dest=/etc/hosts
