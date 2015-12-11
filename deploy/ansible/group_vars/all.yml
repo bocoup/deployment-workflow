@@ -89,13 +89,6 @@ confs:
 # Generate a shadow password hash using the following command:
 # openssl passwd -1 -salt $(openssl rand -base64 6) yourpassword
 #
-# ===================== VERY IMPORTANT NOTE, PLEASE READ =====================
-# When creating a new project using this workflow, REPLACE THE DEFAULT USERS
-# WITH YOUR OWN USERS. If you leave the default users, we'll all have access to
-# your servers, which is something we really don't want.
-# ============================================================================
-#
-# If you have no users to define here, set users to an empty array, like:
 users: []
 
 # users:
