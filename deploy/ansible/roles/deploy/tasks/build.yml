@@ -4,8 +4,19 @@
 
 # Modify as-needed!
 
+- name: compare package.json of current deploy with previous deploy
+  command: diff {{site_path}}/package.json {{clone_path}}/package.json
+  register: package_diff
+  ignore_errors: true
+  no_log: true
+
+- name: copy existing npm modules
+  command: cp -R {{site_path}}/node_modules {{clone_path}}
+  when: package_diff.rc == 0
+
 - name: install npm modules
   npm: path="{{clone_path}}"
+  when: package_diff.rc != 0
 
 - name: build production version
   shell: npm run build
