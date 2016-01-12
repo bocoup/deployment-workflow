@@ -124,6 +124,13 @@ keep_n_most_recent: 3
 # after the build has completed. This file is relative to your project root.
 build_info_path: "public/build.txt"
 
+# If these variables are uncommented, add swap space to the machine when the
+# configure playbook is run. The swap configuration controlled by this is
+# meant to address installation problems on machines with minimal ram (e.g.
+# npm bails during install because it runs out of memory)
+#swap_file_path: /swap
+#swap_file_size: 2GB
+
 ###################
 # DEPLOY EXTRA VARS
 ###################

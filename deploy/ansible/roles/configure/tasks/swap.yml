@@ -1,0 +1,34 @@
+- name: check if swap file exists
+  stat: path={{swap_file_path}}
+  register: swap_file_check
+
+- name: ensure swapfile exists
+  command: fallocate -l {{swap_file_size}} /swap
+  when: not swap_file_check.stat.exists
+  args:
+    creates: "{{swap_file_path}}"
+
+- name: ensure swap file has correct permissions
+  file: path={{swap_file_path}} owner=root group=root mode=0600
+
+- name: ensure swapfile is formatted
+  command: mkswap {{swap_file_path}}
+  when: not swap_file_check.stat.exists
+
+- name: ensure swap file can be mounted
+  mount:
+    name: none
+    src: "{{swap_file_path}}"
+    fstype: swap
+    opts: sw
+    passno: 0
+    dump: 0
+    state: present
+
+- name: ensure swap is activited
+  command: swapon -a
+
+- name: ensure swap is used as a last resort
+  sysctl:
+    name: vm.swappiness
+    value: 0
