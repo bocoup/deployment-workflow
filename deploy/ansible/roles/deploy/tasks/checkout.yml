@@ -7,9 +7,9 @@
 
 - name: clone git repo into temp directory
   git:
-    repo={{synced_folder if local else git_repo}}
-    dest={{clone_path}}
-    version={{commit}}
+    repo: "{{synced_folder if local else git_repo}}"
+    dest: "{{clone_path}}"
+    version: "{{commit}}"
 
 - name: get sha of cloned repo
   command: git rev-parse HEAD
