@@ -3,7 +3,8 @@
 # and setup long-running processes like nginx, postgres, etc.
 
 - hosts: all
-  sudo: yes
+  become: yes
+  become_method: sudo
   roles:
     - {role: configure, tags: configure}
     - {role: users, tags: users}

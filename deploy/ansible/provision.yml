@@ -5,7 +5,8 @@
 # this playbook.
 
 - hosts: all
-  sudo: yes
+  become: yes
+  become_method: sudo
   roles:
     - {role: base, tags: base}
   handlers:
