@@ -6,7 +6,8 @@
 # this playbook will override the deploy playbook, and vice-versa.
 
 - hosts: vagrant
-  sudo: yes
+  become: yes
+  become_method: sudo
   tasks:
     - name: link vagrant synced directory to make it live
       file: path={{site_path}} state=link src={{synced_folder}} force=yes

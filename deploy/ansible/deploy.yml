@@ -4,7 +4,8 @@
 # playbook in Vagrant will override the vagrant-link playbook, and vice-versa.
 
 - hosts: all
-  sudo: yes
+  become: yes
+  become_method: sudo
   roles:
     - deploy
   handlers:
