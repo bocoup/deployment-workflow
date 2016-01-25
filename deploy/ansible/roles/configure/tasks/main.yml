@@ -42,7 +42,7 @@
     dest: /etc/sudoers
     state: present
     insertafter: "^Defaults"
-    line: 'Defaults\tenv_keep += "SSH_AUTH_SOCK"'
+    line: "Defaults\tenv_keep += \"SSH_AUTH_SOCK\""
     validate: "visudo -cf %s"
 
 - name: allow passwordless sudo - development only!
