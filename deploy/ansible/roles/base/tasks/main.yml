@@ -21,7 +21,7 @@
 
 - name: install apt packages
   apt:
-    name: {{item}}
+    name: "{{item}}"
     state: latest
   with_items: apt_packages
 
