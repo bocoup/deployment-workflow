@@ -8,5 +8,3 @@
   become_method: sudo
   roles:
     - deploy
-  handlers:
-    - include: handlers/handlers.yml
