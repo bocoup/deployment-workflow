@@ -11,6 +11,6 @@
     - {role: nginx, tags: nginx}
   handlers:
     - name: restart nginx
-      service: name=service state=restarted
+      service: name=nginx state=restarted
     - name: restart sshd
       service: name=ssh state=restarted
