@@ -15,14 +15,16 @@
   command: mkswap {{swap_file_path}}
   when: not swap_file_check.stat.exists
 
+# the quotes around integers here can be removed when this is resolved
+# https://github.com/ansible/ansible-modules-core/issues/1861
 - name: ensure swap file can be mounted
   mount:
     name: none
     src: "{{swap_file_path}}"
     fstype: swap
     opts: sw
-    passno: 0
-    dump: 0
+    passno: "0"
+    dump: "0"
     state: present
 
 - name: ensure swap is activited
