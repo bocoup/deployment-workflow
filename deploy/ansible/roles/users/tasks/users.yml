@@ -3,7 +3,8 @@
 # removed, they will be deleted.
 
 - name: ensure users are synced
-  user: name={{item.name}}
+  user:
+    name: "{{item.name}}"
     force: yes
     remove: yes
     password: "{{ item.shadow_pass | default(omit) }}"
