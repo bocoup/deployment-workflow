@@ -143,7 +143,12 @@ remote: bocoup
 commit: master
 
 # Git repo address.
-git_repo: git@github.com:{{remote}}/{{project_name}}.git
+# For private repositories: git@github.com:{{remote}}/{{project_name}}.git
+# For public: https://github.com/{{remote}}/{{project_name}}
+git_repo: https://github.com/{{remote}}/{{project_name}}
+
+# Uncomment this if if you are checking out a private repo
+# ansible_ssh_common_args: -o ForwardAgent=yes
 
 # Clone and build the specified commit SHA, regardless of prior build status.
 force: false
