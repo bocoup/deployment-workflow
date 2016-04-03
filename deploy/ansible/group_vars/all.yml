@@ -70,10 +70,13 @@ conf_dir: "{{nginx_dir}}/conf.d"
 
 # Nginx templated configuration files to create.
 shared:
-  - {file: ssl_params, directory: "{{nginx_dir}}"}
-  - {file: gzip_params, directory: "{{nginx_dir}}"}
+  - file: ssl_params
+    directory: "{{nginx_dir}}"
+  - file: gzip_params
+    directory: "{{nginx_dir}}"
 confs:
-  - {file: site.conf, directory: "{{conf_dir}}"}
+  - file: site.conf
+    directory: "{{conf_dir}}"
 
 #######
 # USERS
