@@ -4,8 +4,14 @@
 - name: set hostname
   hostname: name={{hostname}}
 
-- name: ensure unattended upgrades are configured
-  copy: src=10periodic dest=/etc/apt/apt.conf.d/
+- name: ensure unattended upgrades are running
+  copy:
+    content: |
+      APT::Periodic::Update-Package-Lists "1";
+      APT::Periodic::Download-Upgradeable-Packages "1";
+      APT::Periodic::AutocleanInterval "7";
+      APT::Periodic::Unattended-Upgrade "1";
+    dest: /etc/apt/apt.conf.d/10periodic
 
 - name: add loopback references to our domain in /etc/hosts
   lineinfile:
