@@ -162,19 +162,6 @@ See the [Ansible variables](https://docs.ansible.com/playbooks_variables.html)
 documentation for more information on variables, variable precedence, and how
 `{{ }}` templates and filters work.
 
-#### Ansible Configuration File
-
-The [../ansible.cfg](../ansible.cfg) file at the root of the repo contains
-settings that change how Ansible behaves. In this workflow, Ansible is
-configured to use [ssh agent
-forwarding](https://developer.github.com/guides/using-ssh-agent-forwarding/),
-which allows the remote server to access private Git repositories without
-requiring your private key to be copied to that server.
-
-See [the Ansible configuration
-file](http://docs.ansible.com/intro_configuration.html) documentation for more
-information.
-
 ### Ansible Inventory
 
 These files contain the addresses of any servers to which this project will be
