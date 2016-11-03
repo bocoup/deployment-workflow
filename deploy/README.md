@@ -98,7 +98,7 @@ The following will need to be installed on your local development machine before
 you can use this workflow. All versions should be the latest available unless
 otherwise specified.
 
-* **[Ansible (version 1.9.2)](http://docs.ansible.com/)**
+* **[Ansible (version 2.1.x)](http://docs.ansible.com/)**
   - Install `ansible` via apt (Ubuntu), yum (Fedora), [homebrew][homebrew] (OS
     X), etc. See the [Ansible installation
     instructions](http://docs.ansible.com/intro_installation.html) for detailed,
