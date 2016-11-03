@@ -2,7 +2,7 @@
 # add all users defined in group_vars/all (production).
 
 - include: localuser.yml
-  when: env == "development"
+  when: "{{ env == 'development' }}"
 
 - include: users.yml
-  when: env != "development"
+  when: "{{ env != 'development' }}"

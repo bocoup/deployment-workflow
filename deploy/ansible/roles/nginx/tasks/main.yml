@@ -12,23 +12,23 @@
   args:
     creates: "{{item.directory}}/{{item.file}}"
   with_flattened:
-    - confs
-    - shared
+    - "{{ confs }}"
+    - "{{ shared }}"
 
 - name: backup existing nginx config files
   shell: cp {{item.file}} {{item.file}}.backup
   args:
     chdir: "{{item.directory}}"
   with_flattened:
-    - confs
-    - shared
+    - "{{ confs }}"
+    - "{{ shared }}"
 
 - name: generate new nginx config files
   template: src={{item.file}} dest={{item.directory}}/
   register: nginx_conf
   with_flattened:
-    - confs
-    - shared
+    - "{{ confs }}"
+    - "{{ shared }}"
   notify: restart nginx
 
 - name: ensure nginx config is valid
@@ -41,15 +41,15 @@
 - name: remove temporary backups if new nginx config files are valid
   file: path={{item.directory}}/{{item.file}}.backup state=absent
   with_flattened:
-    - confs
-    - shared
+    - "{{ confs }}"
+    - "{{ shared }}"
   when: nginx_test_valid | success
 
 - name: restore temporary backups if new nginx config files are invalid
   shell: mv {{item.file}}.backup {{item.file}}
   args:
     chdir: "{{item.directory}}"
-  with_items: confs
+  with_items: "{{ confs }}"
   when: nginx_test_valid | failed
 
 - fail: msg="nginx config is invalid"
