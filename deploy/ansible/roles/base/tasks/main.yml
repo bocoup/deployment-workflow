@@ -9,21 +9,29 @@
   apt: upgrade=safe
   when: env != "development"
 
+# Can't use ansible's apt_repository module because we need to fetch gpg keys
+# that are hosted on SNI-enabled servers. Python doesn't support SNI natively
+# until 2.7.9 and ubuntu 14.04 ships with 2.7.6. Updating the system python is
+# not a road we'll be going down.
 - name: add keys to apt
-  apt_key: url={{item}} state=present
-  with_items: apt_keys
+  shell: wget -qO - {{item}} | apt-key add -
+  with_items: "{{ apt_keys }}"
+# If you are running this on a system with python 2.7.9+, use this instead
+#- name: add keys to apt
+#  apt_key: url={{item}} state=present
+#  with_items: apt_keys
 
 - name: add ppas to apt
   apt_repository:
     repo: "{{item}}"
     state: present
-  with_items: apt_ppas
+  with_items: "{{ apt_ppas }}"
 
 - name: install apt packages
   apt:
     name: "{{item}}"
     state: latest
-  with_items: apt_packages
+  with_items: "{{ apt_packages }}"
 
 - name: update npm to latest
   npm: name=npm state=latest global=yes
