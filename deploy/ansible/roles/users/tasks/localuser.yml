@@ -12,5 +12,5 @@
 
 - name: ensure the local user's public key is synced
   authorized_key:
-    user: "{{user.name}}"
+    user: "{{ user.name }}"
     key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"

@@ -9,9 +9,9 @@
     remove: yes
     password: "{{ item.shadow_pass | default(omit) }}"
     state: "{{ item.state | default(omit) }}"
-    shell: "{{ item.shell | default("/bin/bash") }}"
-    groups: "{{ item.groups | default("sudo") }}"
-  with_items: users
+    shell: "{{ item.shell | default('/bin/bash') }}"
+    groups: "{{ item.groups | default('sudo') }}"
+  with_items: "{{ users }}"
 
 - name: ensure user public keys are synced
   authorized_key:
@@ -19,5 +19,5 @@
     key: "{{ item.public_keys | join('\n') }}"
     state: present
     exclusive: yes
-  with_items: users
+  with_items: "{{ users }}"
   when: item.public_keys is defined and item.public_keys | length > 0
