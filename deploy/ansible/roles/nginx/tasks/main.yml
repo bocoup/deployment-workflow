@@ -29,7 +29,7 @@
   with_flattened:
     - "{{ confs }}"
     - "{{ shared }}"
-  notify: restart nginx
+  notify: reload nginx
 
 - name: ensure nginx config is valid
   shell: nginx -t

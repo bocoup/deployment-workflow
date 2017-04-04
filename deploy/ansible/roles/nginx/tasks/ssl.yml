@@ -5,7 +5,7 @@
   shell: openssl dhparam -dsaparam -out {{dhe_param_path}} 4096
   args:
     creates: "{{dhe_param_path}}"
-  notify: restart nginx
+  notify: reload nginx
 
 - name: create self-signed ssl cert/key - development only!
   command: >
@@ -15,7 +15,7 @@
   args:
     creates: "{{ssl_cert_path}}"
   when: env == "development"
-  notify: restart nginx
+  notify: reload nginx
 
 - name: ensure ssl cert/key exist
   stat: path={{item}}
