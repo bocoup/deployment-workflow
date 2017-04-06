@@ -54,3 +54,6 @@
 
 - fail: msg="nginx config is invalid"
   when: nginx_test_valid | failed
+
+- include: certbot.yml
+  when: ssl

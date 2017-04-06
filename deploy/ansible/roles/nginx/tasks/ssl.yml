@@ -7,14 +7,13 @@
     creates: "{{dhe_param_path}}"
   notify: reload nginx
 
-- name: create self-signed ssl cert/key - development only!
+- name: create self-signed ssl cert/key
   command: >
     openssl req -new -nodes -x509
     -subj "/C=US/ST=Oregon/L=Portland/O=IT/CN={{site_fqdn}}" -days 3650
     -keyout {{ssl_key_path}} -out {{ssl_cert_path}} -extensions v3_ca
   args:
     creates: "{{ssl_cert_path}}"
-  when: env == "development"
   notify: reload nginx
 
 - name: ensure ssl cert/key exist
