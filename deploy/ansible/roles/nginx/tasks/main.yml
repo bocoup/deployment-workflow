@@ -56,4 +56,4 @@
   when: nginx_test_valid | failed
 
 - include: certbot.yml
-  when: ssl
+  when: ssl and inventory_hostname != 'vagrant'
