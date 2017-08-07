@@ -44,8 +44,9 @@
     - { src: 'privkey.pem', dest: '{{ssl_key_path}}' }
   notify: reload nginx
 
-- name: install certbot post-hook script
-  template:
-    src: reload-nginx
-    dest: /etc/letsencrypt/post-hook.d/reload-nginx
-    mode: 0755
+- name: Add cron job for cert renewal
+  cron:
+    name: Certbot automatic renewal.
+    job: "/usr/bin/certbot renew --quiet --no-self-upgrade && service nginx reload"
+    minute: 0
+    hour: 23
