@@ -10,7 +10,7 @@
     - {role: users, tags: users}
     - {role: nginx, tags: nginx}
   handlers:
-    - name: restart nginx
-      service: name=nginx state=restarted
+    - name: reload nginx
+      service: name=nginx state=reloaded
     - name: restart sshd
       service: name=ssh state=restarted

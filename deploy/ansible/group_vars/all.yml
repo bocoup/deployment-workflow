@@ -51,11 +51,12 @@ apt_packages:
 # Should the nginx server use HTTPS instead of HTTP?
 ssl: true
 
-# If ssl is enabled, these cert/key files will be used by nginx. You will need
-# to ensure these files are valid and already on the server (which you can do
-# via cloud-init, scp, etc).
-ssl_cert_path: /etc/ssl/star.bocoup.com.cert
-ssl_key_path: /etc/ssl/star.bocoup.com.key
+# If ssl is enabled, these cert/key files will be used by nginx.
+ssl_cert_path: /etc/ssl/cert.pem
+ssl_key_path: /etc/ssl/privkey.pem
+
+# If ssl is enabled, email address to receive notifications from letsencrypt.
+letsencrypt_email: infrastructure@bocoup.com
 
 # Use a custom parameter for stronger DHE key exchange.
 dhe_param_path: /etc/ssl/certs/dhparam.pem

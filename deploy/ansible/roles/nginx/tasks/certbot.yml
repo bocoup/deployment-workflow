@@ -1,0 +1,52 @@
+# Use certbot to generate letsencrypt ssl certs. This will also set up a cron
+# job that will ensure the certs are kept up-to-date.
+
+- name: add certbot ppa to apt
+  apt_repository:
+    repo: "ppa:certbot/certbot"
+
+- name: install certbot
+  apt:
+    name: certbot=0.14.*
+    state: present
+
+- name: ensure certbot well-known path exists
+  file:
+    path: "{{base_path}}/certbot/.well-known"
+    state: directory
+
+- name: test if certbot has been initialized
+  stat:
+    path: /etc/letsencrypt/live/{{site_fqdn}}/fullchain.pem
+  register: cert_file
+
+- name: ensure any pending nginx reload happens immediately
+  meta: flush_handlers
+  when: cert_file.stat.exists == false
+
+- name: intialize certbot
+  command: >
+    certbot certonly --webroot --agree-tos --non-interactive
+    {{ (env == 'production') | ternary('', '--test-cert') }}
+    --email {{letsencrypt_email}}
+    -w {{base_path}}/certbot
+    -d {{site_fqdn}}
+  when: cert_file.stat.exists == false
+
+- name: ensure certbot certs are linked
+  file:
+    src: '/etc/letsencrypt/live/{{site_fqdn}}/{{item.src}}'
+    dest: '{{item.dest}}'
+    state: link
+    force: true
+  with_items:
+    - { src: 'fullchain.pem', dest: '{{ssl_cert_path}}' }
+    - { src: 'privkey.pem', dest: '{{ssl_key_path}}' }
+  notify: reload nginx
+
+- name: Add cron job for cert renewal
+  cron:
+    name: Certbot automatic renewal.
+    job: "/usr/bin/certbot renew --quiet --no-self-upgrade && service nginx reload"
+    minute: 0
+    hour: 23
