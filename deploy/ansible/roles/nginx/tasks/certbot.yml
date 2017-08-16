@@ -7,7 +7,7 @@
 
 - name: install certbot
   apt:
-    name: certbot=0.14.*
+    name: certbot
     state: present
 
 - name: ensure certbot well-known path exists
