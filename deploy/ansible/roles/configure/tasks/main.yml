@@ -2,7 +2,9 @@
 # the project is cloned or built.
 
 - name: set hostname
-  hostname: name={{hostname}}
+  hostname:
+    name: '{{hostname}}'
+    use: systemd
 
 - name: ensure unattended upgrades are running
   copy:
