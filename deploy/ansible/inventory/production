@@ -1,4 +1,4 @@
 # Specify your production app server here. This should match the ansible
 # group_vars/all site_fqdn setting.
 
-deployment-workflow.bocoup.com
+deployment-workflow-v2.bocoup.com
