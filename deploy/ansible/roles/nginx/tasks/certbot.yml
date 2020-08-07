@@ -1,10 +1,6 @@
 # Use certbot to generate letsencrypt ssl certs. This will also set up a cron
 # job that will ensure the certs are kept up-to-date.
 
-- name: add certbot ppa to apt
-  apt_repository:
-    repo: "ppa:certbot/certbot"
-
 - name: install certbot
   apt:
     name: certbot
