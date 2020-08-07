@@ -43,6 +43,7 @@ apt_packages:
   - nginx
   - git
   - nodejs
+  - npm
 
 ############
 # WEB SERVER
