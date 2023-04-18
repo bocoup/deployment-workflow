@@ -25,10 +25,10 @@ body {
   border-top: solid transparent;
   border-width: 10px 0 10px 0;
   border-style: solid;
-  -webkit-border-image: url(https://static.bocoup.com/assets/img/rainbow-header.svg.gz) 4 1 4 1 stretch;
-  -moz-border-image: url(https://static.bocoup.com/assets/img/rainbow-header.svg.gz) 4 1 4 1 stretch;
-  -o-border-image: url(https://static.bocoup.com/assets/img/rainbow-header.svg.gz) 4 1 4 1 stretch;
-  border-image: url(https://static.bocoup.com/assets/img/rainbow-header.svg.gz) 4 1 4 1 stretch;
+  -webkit-border-image: url(rainbow-header.svg) 4 1 4 1 stretch;
+  -moz-border-image: url(rainbow-header.svg) 4 1 4 1 stretch;
+  -o-border-image: url(rainbow-header.svg) 4 1 4 1 stretch;
+  border-image: url(rainbow-header.svg) 4 1 4 1 stretch;
   min-height: 100vh;
 }
 
