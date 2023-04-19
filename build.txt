@@ -1,3 +1,0 @@
-date: 2017-09-20T15:02:11Z
-sha: 23088322d6bf5fd7cca3379dc60b5696b20aff5a
-env: production
