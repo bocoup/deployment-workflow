@@ -407,3 +407,12 @@ code {
     margin-bottom: 2em;
   }
 }
+
+.warning {
+  border-width: 1px;
+  padding: 1em;
+
+  background-color: #ffdddd;
+  border-color: #ff0000;
+  border-style: solid;
+}
