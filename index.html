@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Modern Web Deployment Workflow</title>
+  <link rel="stylesheet" href="site.css">
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700' rel='stylesheet' type='text/css'>
+</head>
+<body>
+<div class="col-fullwidth markdown-body">
+
+  <div class="col-condensed">
+    
+    <div class="nav">
+      <ul><li><a class="nav1" href="#overview">Overview<span></span></a></li><li><a class="nav1" href="#dependencies">Dependencies<span></span></a></li><li><a class="nav1" href="#initial-setup">Initial Setup<span></span></a></li><li><a class="nav1" href="#ansible">Ansible<span></span></a><ul><li><a class="nav2" href="#ansible-configuration">Ansible Configuration<span></span></a></li><li><a class="nav2" href="#ansible-inventory">Ansible Inventory<span></span></a></li><li><a class="nav2" href="#ansible-playbooks">Ansible Playbooks<span></span></a></li><li><a class="nav2" href="#ansible-roles">Ansible Roles<span></span></a></li></ul></li><li><a class="nav1" href="#vagrant">Vagrant<span></span></a><ul><li><a class="nav2" href="#configuring-vagrant">Configuring Vagrant<span></span></a></li><li><a class="nav2" href="#using-vagrant">Using Vagrant<span></span></a></li><li><a class="nav2" href="#using-ssh-with-vagrant">Using SSH with Vagrant<span></span></a></li></ul></li><li><a class="nav1" href="#deploying">Deploying<span></span></a><ul><li><a class="nav2" href="#command-line-flags">Command Line Flags<span></span></a></li><li><a class="nav2" href="#playbook-helper-script">Playbook helper script<span></span></a></li></ul></li></ul>
+
+      <link href="//cdn-images.mailchimp.com/embedcode/slim-081711.css" rel="stylesheet" type="text/css">
+
+      <p>Get the source at <a href="https://github.com/bocoup/deployment-workflow/">GitHub</a>.<br>
+      Last updated on Wed Sep 20 2017.</p>
+
+    </div>
+    
+    <div class="post-body">
+      <h1 id="modern-web-deployment-workflow"><a class="anchor" aria-hidden="true" href="#modern-web-deployment-workflow"><span class="octicon octicon-link"></span></a>Modern Web Deployment Workflow</h1>
+<div class="by-bocoup">A legacy technical operations tool built at <a href="https://bocoup.com/"><img src="bocoup.png" width="100px" alt="Bocoup"></a></div>
+
+<p>This collection of Ansible playbooks have been designed to simplify deployment
+of a modern website or web app using Vagrant, Ubuntu, nginx and HTTP/HTTPS. Many
+tasks have been separated into separate roles, and as much configuration as
+possible has been abstracted into external variables.</p>
+<p class="warning"><em>Deprecation Warning</em> This project is no longer
+maintained. Bocoup discourages new projects from adopting these patterns and
+offers the original documentation (below) strictly as a resource for legacy
+projects.</p>
+<p>High-level benefits include:</p>
+<ul>
+<li>A new server can be up and running with fully deployed code in just a few
+minutes.</li>
+<li>An update to an existing project can be deployed and built in under a minute.</li>
+<li>A project can be rolled back to a previously-deployed version in a matter of
+seconds.</li>
+<li>Updates to server configuration can be made in a matter of seconds.</li>
+<li>Most server configuration and code updates can be made with zero server
+downtime.</li>
+<li>Code can be tested locally in Vagrant before being deployed to a production
+server.</li>
+<li>Code can be tested on a staging server for QA or final testing before being
+deployed to a production server.</li>
+<li>Server configuration and project deployment can be made to scale to any number
+of remote hosts.</li>
+</ul>
+<p>More specific benefits include:</p>
+<ul>
+<li>Almost all server configuration and project deployment information is stored
+in the project, making it easy to destroy and re-create servers with
+confidence.</li>
+<li>All project maintainer user account information is stored in the project,
+making it easy to add or remove project maintainers.</li>
+<li>SSH agent forwarding allows the remote server to access private GitHub repos
+without requiring a private key to be copied to the server or for dedicated
+deployment keys to be configured.</li>
+<li>While working locally, the Vagrant box can easily be toggled between
+development and deployment modes at any time. This allows local changes to be
+previewed instantly (development) or a specific commit to be built as it would
+be in production (deployment).</li>
+<li>SSL certs can be auto-generated for testing HTTPS in development.</li>
+<li>Because the entire deployment workflow is comprised of Ansible playbooks and a
+Vagrantfile, it can be easily modified to meet any project&#39;s needs.</li>
+</ul>
+<p>Here are links to the official, original project home page, documentation, Git
+repository and wiki:</p>
+<ul>
+<li><a href="https://deployment-workflow.bocoup.com/">Canonical home page &amp; documentation</a></li>
+<li><a href="https://github.com/bocoup/deployment-workflow/">Canonical Git repository</a></li>
+<li><a href="https://github.com/bocoup/deployment-workflow/wiki">Canonical wiki</a></li>
+</ul>
+<p>Notes:</p>
+<ul>
+<li>Even though Node.js and npm are used in this sample project, with minor
+edits this workflow can be made to work with basically any programming
+language, package manager, etc.</li>
+<li>This workflow won&#39;t teach you how to create an AWS instance. Fortunately,
+there are already excellent guides for <a href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html">creating a key
+pair</a>,
+<a href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-network-security.html">setting up a security
+group</a>
+and <a href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-launch-instance_linux.html">launching an
+instance</a>.</li>
+<li>This workflow has been thoroughly tested in <a href="http://releases.ubuntu.com/14.04/">Ubuntu 14.04 LTS
+(trusty)</a>. More specifically, with the
+<a href="https://vagrantcloud.com/ubuntu/boxes/trusty64">ubuntu/trusty64</a> Vagrant
+image and with the AWS EC2 <code>Ubuntu Server 14.04 LTS</code> AMI. Minor adjustments
+might need to be made for other providers, while more substantial changes
+might need to be made for other Ubuntu versions or Linux distributions.</li>
+<li>While this workflow has been designed to meet the needs of a typical use
+case, it might not meet your project&#39;s needs exactly. Consider this to be
+a starting point; you&#39;re encouraged to edit the included playbooks and roles!</li>
+</ul>
+<h2 id="overview"><a class="anchor" aria-hidden="true" href="#overview"><span class="octicon octicon-link"></span></a>Overview</h2>
+<p>Assuming you&#39;ve already created (or are in the process of creating) a website or
+web app, you will typically perform these steps when using this workflow.</p>
+<ol>
+<li>Ensure the <a href="#dependencies">workflow dependencies</a> have been installed on your
+development machine.</li>
+<li>Add and commit the <a href="#initial-setup">workflow files</a> into your project.</li>
+<li>Modify the <a href="#ansible">Ansible variables, playbooks and roles</a> to meet your
+specific project needs.</li>
+<li>Test your project on the <a href="#vagrant">local Vagrant box</a> while authoring
+it. <em>(Optional, but recommended)</em></li>
+<li><a href="#deploying">Deploy</a> your project to a staging server for QA and final
+testing. <em>(Optional, but recommended)</em></li>
+<li><a href="#deploying">Deploy</a> your project to a production server.</li>
+</ol>
+<p>Step 1 is usually only done per development machine, steps 2-3 are usually only
+done per project, and steps 4-6 will be repeated throughout the life of your
+project as you make and test changes and deploy new versions of your website or
+web app.</p>
+<h2 id="dependencies"><a class="anchor" aria-hidden="true" href="#dependencies"><span class="octicon octicon-link"></span></a>Dependencies</h2>
+<p>The following will need to be installed on your local development machine before
+you can use this workflow. All versions should be the latest available unless
+otherwise specified.</p>
+<ul>
+<li><strong><a href="http://docs.ansible.com/">Ansible (version 2.1.x)</a></strong><ul>
+<li>Install <code>ansible</code> via apt (Ubuntu), yum (Fedora), <a href="http://brew.sh/">homebrew</a> (OS
+X), etc. See the <a href="http://docs.ansible.com/intro_installation.html">Ansible installation
+instructions</a> for detailed,
+platform-specific information.</li>
+</ul>
+</li>
+<li><strong><a href="https://www.virtualbox.org/">VirtualBox</a></strong><ul>
+<li><a href="https://www.virtualbox.org/wiki/Downloads">Download</a> (All platforms)</li>
+<li>Install <code>virtualbox</code> via <a href="http://caskroom.io/">homebrew cask</a> (OS X)</li>
+</ul>
+</li>
+<li><strong><a href="https://www.vagrantup.com/">Vagrant</a></strong><ul>
+<li><a href="http://docs.vagrantup.com/v2/installation/">Download</a> (All platforms)</li>
+<li>Install <code>vagrant</code> via <a href="http://caskroom.io/">homebrew cask</a> (OS X)</li>
+</ul>
+</li>
+<li><strong><a href="https://github.com/cogitatio/vagrant-hostsupdater">vagrant-hostsupdater</a></strong><ul>
+<li>Install with <code>vagrant plugin install vagrant-hostsupdater</code> (All platforms)</li>
+</ul>
+</li>
+</ul>
+<p>Notes:</p>
+<ul>
+<li>Ansible doesn&#39;t really work in Windows. But it works great in OS X and Linux,
+so be sure to use one of those operating systems for development.</li>
+</ul>
+<h2 id="initial-setup"><a class="anchor" aria-hidden="true" href="#initial-setup"><span class="octicon octicon-link"></span></a>Initial Setup</h2>
+<p>Copy this project&#39;s files so that the <a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy">deploy</a> directory is in the root of
+your project Git repository. Be sure to copy recursively and preserve file
+modes, eg. executable, so that the <a href="#bash-helper-script">bash helper script</a>
+continues to work. The <a href="#configuring-vagrant">Vagrantfile</a> and
+<a href="#ansible-configuration">ansible.cfg</a> file should be placed in your project root
+directory, <em>not</em> the deploy directory.</p>
+<p>Also, be sure to add <code>.vagrant</code> to your project&#39;s <code>.gitignore</code> file so that
+directory&#39;s contents, which are auto-generated by Vagrant, aren&#39;t committed with
+your project&#39;s source.</p>
+<h2 id="ansible"><a class="anchor" aria-hidden="true" href="#ansible"><span class="octicon octicon-link"></span></a>Ansible</h2>
+<p>At the core of this workflow is Ansible, an IT automation tool. Ansible aims to
+be simple to configure and easy to use, while being secure and reliable. In this
+workflow, Ansible is used to configure systems and deploy software.</p>
+<h3 id="ansible-configuration"><a class="anchor" aria-hidden="true" href="#ansible-configuration"><span class="octicon octicon-link"></span></a>Ansible Configuration</h3>
+<h4 id="ansible-variables"><a class="anchor" aria-hidden="true" href="#ansible-variables"><span class="octicon octicon-link"></span></a>Ansible Variables</h4>
+<p>Much of this workflow&#39;s behavior can be configured via Ansible variables.</p>
+<ul>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/group_vars/all.yml">deploy/ansible/group_vars/all.yml</a> - variables global to all
+<a href="#ansible-playbooks">playbooks</a> and <a href="#ansible-roles">roles</a></li>
+</ul>
+<p>Host-specific settings may be defined in host-named files in the
+<a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/host_vars">host_vars</a> directory and will override global values.</p>
+<ul>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/host_vars/vagrant">deploy/ansible/host_vars/vagrant</a> - variables specific to the
+<code>vagrant</code> <a href="#ansible-inventory">inventory</a> host</li>
+</ul>
+<p>Variables may be overridden when a playbook is run via the <code>--extra-vars</code>
+command line option. These variables are noted in the preceding files as <code>EXTRA
+VARS</code>.</p>
+<p>See the <a href="https://docs.ansible.com/playbooks_variables.html">Ansible variables</a>
+documentation for more information on variables, variable precedence, and how
+<code>{{ }}</code> templates and filters work.</p>
+<h3 id="ansible-inventory"><a class="anchor" aria-hidden="true" href="#ansible-inventory"><span class="octicon octicon-link"></span></a>Ansible Inventory</h3>
+<p>These files contain the addresses of any servers to which this project will be
+deployed. Usually, these addresses will be <a href="https://en.wikipedia.org/wiki/Fully_qualified_domain_name">fully qualified domain
+names</a>, but they may
+also be IPs. Each inventory file may contain a list of multiple server FQDNs or
+IPs, allowing a playbook to be deployed to multiple servers simultaneously, but
+for this workflow, each inventory file will list a single server.</p>
+<ul>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/inventory/production">deploy/ansible/inventory/production</a></li>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/inventory/staging">deploy/ansible/inventory/staging</a></li>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/inventory/vagrant">deploy/ansible/inventory/vagrant</a></li>
+</ul>
+<p>Like with <a href="#ansible-variables">host variables</a>, settings defined here will
+override those defined in the <a href="#ansible-variables">global variables</a> and <a href="#ansible-variables">group
+variables</a> files. For example, in the staging inventory, the
+<code>site_fqdn</code> variable can be set to the staging server&#39;s FQDN, allowing nginx to
+respond to requests made to <em>its</em> FQDN instead of the production server&#39;s FQDN.</p>
+<p>Unless the variable is a server name-specific override like <code>site_fqdn</code> or
+<code>ansible_ssh_host</code>, it should probably be defined in <a href="#ansible-variables">host
+variables</a>.</p>
+<h3 id="ansible-playbooks"><a class="anchor" aria-hidden="true" href="#ansible-playbooks"><span class="octicon octicon-link"></span></a>Ansible Playbooks</h3>
+<p>Ansible playbooks are human-readable documents that describe and configure the
+tasks that Ansible will run on a remote server. They should be idempotent,
+allowing them to be run multiple times with the same result each time.</p>
+<p>The following playbooks are included in this workflow:</p>
+<ul>
+<li><a href="#provision-playbook">provision playbook</a></li>
+<li><a href="#configure-playbook">configure playbook</a></li>
+<li><a href="#deploy-playbook">deploy playbook</a></li>
+<li><a href="#vagrant-link-playbook">vagrant-link playbook</a></li>
+<li><a href="#init-playbook">init playbook</a></li>
+</ul>
+<p>For more detailed information on what each playbook actually does and how it
+will need to be configured, be sure to check out the description for each
+<a href="#ansible-roles">role</a> that playbook includes.</p>
+<h4 id="provision-playbook"><a class="anchor" aria-hidden="true" href="#provision-playbook"><span class="octicon octicon-link"></span></a>provision playbook</h4>
+<p>Provision server. This playbook must be run when a server is first created
+and is typically only run once. It may be run again if you make server-level
+changes or need to update any installed apt modules to their latest versions.
+If you were creating a new AMI or base box, you&#39;d do so after running only
+this playbook.</p>
+<ul>
+<li>Playbook: <a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/provision.yml">deploy/ansible/provision.yml</a></li>
+<li>Roles: <a href="#base-role">base</a></li>
+</ul>
+<h4 id="configure-playbook"><a class="anchor" aria-hidden="true" href="#configure-playbook"><span class="octicon octicon-link"></span></a>configure playbook</h4>
+<p>Configure server. This playbook is run after a server is provisioned but
+before a project is deployed, to configure the system, add user accounts,
+and setup long-running processes like nginx, postgres, etc.</p>
+<ul>
+<li>Playbook: <a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/configure.yml">deploy/ansible/configure.yml</a></li>
+<li>Roles: <a href="#configure-role">configure</a>, <a href="#users-role">users</a>, <a href="#nginx-role">nginx</a></li>
+</ul>
+<h4 id="deploy-playbook"><a class="anchor" aria-hidden="true" href="#deploy-playbook"><span class="octicon octicon-link"></span></a>deploy playbook</h4>
+<p>Clone, build, and deploy, restarting nginx if necessary. This playbook must
+be run after <code>provision</code> and <code>configure</code>, and is used to deploy and build the
+specified commit (overridable via extra vars) on the server. Running this
+playbook in Vagrant will override the <code>vagrant-link</code> playbook, and vice-versa.</p>
+<ul>
+<li>Playbook: <a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/deploy.yml">deploy/ansible/deploy.yml</a></li>
+<li>Roles: <a href="#deploy-role">deploy</a></li>
+</ul>
+<h4 id="vagrant-link-playbook"><a class="anchor" aria-hidden="true" href="#vagrant-link-playbook"><span class="octicon octicon-link"></span></a>vagrant-link playbook</h4>
+<p>Instead of cloning the Git repo and building like the <code>deploy</code> playbook, this
+playbook links your local working project directory into the Vagrant box so that
+you can instantly preview your local changes on the server, for convenience
+while developing. While in this mode, all building will have to be done
+manually, at the command line of your development machine. Running this playbook
+will override the <code>deploy</code> playbook, and vice-versa.</p>
+<ul>
+<li>Playbook: <a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/vagrant-link.yml">deploy/ansible/vagrant-link.yml</a></li>
+</ul>
+<h4 id="init-playbook"><a class="anchor" aria-hidden="true" href="#init-playbook"><span class="octicon octicon-link"></span></a>init playbook</h4>
+<p>This playbook saves the trouble of running the <code>provision</code>, <code>configure</code> and
+<code>vagrant-link</code> playbooks individually, and is provided for convenience. After
+<code>vagrant up</code>, this playbook will be run on the new Vagrant box.</p>
+<ul>
+<li>Playbook: <a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/init.yml">deploy/ansible/init.yml</a></li>
+</ul>
+<h3 id="ansible-roles"><a class="anchor" aria-hidden="true" href="#ansible-roles"><span class="octicon octicon-link"></span></a>Ansible Roles</h3>
+<p>There are multiple ways to organize playbooks, and while it&#39;s possible to put
+all your tasks into a single playbook, it&#39;s often beneficial to separate related
+tasks into &quot;roles&quot; that can be included in one or more playbooks, for easy reuse
+and organization.</p>
+<p>The following roles are used by this workflow&#39;s playbooks:</p>
+<ul>
+<li><a href="#base-role">base role</a></li>
+<li><a href="#configure-role">configure role</a></li>
+<li><a href="#nginx-role">nginx role</a></li>
+<li><a href="#users-role">users role</a></li>
+<li><a href="#deploy-role">deploy role</a></li>
+</ul>
+<h4 id="base-role"><a class="anchor" aria-hidden="true" href="#base-role"><span class="octicon octicon-link"></span></a>base role</h4>
+<p>Get the box up and running. These tasks run before the box is configured
+or the project is cloned or built. All system dependencies should be
+installed here.</p>
+<p>Apt keys, apt ppas, apt packages and global npm modules can be configured in the
+<code>PROVISIONING</code> section of the <a href="#ansible-variables">global variables</a> file. If
+you need custom packages or modules to be installed, specify them there.</p>
+<p>Don&#39;t be afraid to modify these tasks. For example, if your project doesn&#39;t use
+npm, just remove the npm tasks.</p>
+<p>This role contains the following files and tasks:</p>
+<ul>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/base/tasks/main.yml">main.yml</a><ul>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/base/tasks/main.yml#L5">ensure apt cache is updated</a></li>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/base/tasks/main.yml#L8">ensure all packages are upgraded safely</a></li>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/base/tasks/main.yml#L16">add keys to apt</a></li>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/base/tasks/main.yml#L24">add ppas to apt</a></li>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/base/tasks/main.yml#L30">install apt packages</a></li>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/base/tasks/main.yml#L36">update npm to latest</a></li>
+</ul>
+</li>
+</ul>
+<p><em>(Browse the <a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/base">deploy/ansible/roles/base</a> directory for more information)</em></p>
+<h4 id="configure-role"><a class="anchor" aria-hidden="true" href="#configure-role"><span class="octicon octicon-link"></span></a>configure role</h4>
+<p>Configure the box. This happens after the base initialization, but before
+the project is cloned or built.</p>
+<p>This role contains the following files and tasks:</p>
+<ul>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/configure/tasks/swap.yml">swap.yml</a><ul>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/configure/tasks/swap.yml#L1">check if swap file exists</a></li>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/configure/tasks/swap.yml#L5">ensure swapfile exists</a></li>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/configure/tasks/swap.yml#L11">ensure swap file has correct permissions</a></li>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/configure/tasks/swap.yml#L14">ensure swapfile is formatted</a></li>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/configure/tasks/swap.yml#L20">ensure swap file can be mounted</a></li>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/configure/tasks/swap.yml#L30">ensure swap is activited</a></li>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/configure/tasks/swap.yml#L33">ensure swap is used as a last resort</a></li>
+</ul>
+</li>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/configure/tasks/main.yml">main.yml</a><ul>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/configure/tasks/main.yml#L4">set hostname</a></li>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/configure/tasks/main.yml#L7">ensure unattended upgrades are running</a></li>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/configure/tasks/main.yml#L16">add loopback references to our domain in /etc/hosts</a></li>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/configure/tasks/main.yml#L22">disallow password authentication</a></li>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/configure/tasks/main.yml#L30">disallow challenge response authentication</a></li>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/configure/tasks/main.yml#L38">ensure github.com is a known host</a></li>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/configure/tasks/main.yml#L46">ensure ssh agent socket environment variable persists when sudoing</a></li>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/configure/tasks/main.yml#L54">allow passwordless sudo - development only!</a></li>
+</ul>
+</li>
+</ul>
+<p><em>(Browse the <a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/configure">deploy/ansible/roles/configure</a> directory for more information)</em></p>
+<h4 id="nginx-role"><a class="anchor" aria-hidden="true" href="#nginx-role"><span class="octicon octicon-link"></span></a>nginx role</h4>
+<p>Generate nginx config files (and ssl configuration, if ssl was specified),
+rolling back changes if any part of the config is invalid.</p>
+<p>The public site path, ssl and ssl cert/key file locations can be configured in
+the <code>WEB SERVER</code> section of the <a href="#ansible-variables">global variables</a> file. If
+you want to override any settings for just Vagrant, you can do so in <a href="#ansible-variables">host
+variables</a>.</p>
+<p>By default, nginx is configured to serve a website with a custom 404 page.
+However, if you want to redirect all requests to <code>index.html</code> (eg. for a web
+app), you should modify the <a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/nginx/templates/site.conf">site.conf</a>
+template per the inline comments. For more involved customization, read the
+<a href="http://nginx.org/en/docs/">nginx documentation</a>.</p>
+<p>If you enable SSL for <code>production</code> or <code>staging</code>, you will need to supply your
+own signed SSL cert/key files and put them on the remote server via <a href="http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/deploying.applications.html">AWS
+CloudFormation</a>,
+<a href="http://cloudinit.readthedocs.org/">cloud-init</a>, or you can <a href="https://github.com/bocoup/deployment-workflow/wiki/FAQ#how-do-i-manually-copy-ssl-certs-to-a-remote-server">copy them
+manually</a>
+<em>before</em> provisioning, or this role will fail.</p>
+<p>If you choose to enable SSL for <code>vagrant</code>, self-signed SSL cert/key files will
+be generated for you automatically if they don&#39;t already exist. In this case,
+your website or web app will work, but you will have to click past a SSL
+certificate warning before viewing it.</p>
+<p>This role contains the following files and tasks:</p>
+<ul>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/nginx/tasks/ssl.yml">ssl.yml</a><ul>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/nginx/tasks/ssl.yml#L4">generate strong dhe parameter</a></li>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/nginx/tasks/ssl.yml#L10">create self-signed ssl cert/key</a></li>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/nginx/tasks/ssl.yml#L19">ensure ssl cert/key exist</a></li>
+</ul>
+</li>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/nginx/tasks/main.yml">main.yml</a><ul>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/nginx/tasks/main.yml#L7">ensure default nginx server is not present</a></li>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/nginx/tasks/main.yml#L10">ensure nginx config files exist</a></li>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/nginx/tasks/main.yml#L18">backup existing nginx config files</a></li>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/nginx/tasks/main.yml#L26">generate new nginx config files</a></li>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/nginx/tasks/main.yml#L34">ensure nginx config is valid</a></li>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/nginx/tasks/main.yml#L41">remove temporary backups if new nginx config files are valid</a></li>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/nginx/tasks/main.yml#L48">restore temporary backups if new nginx config files are invalid</a></li>
+</ul>
+</li>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/nginx/tasks/certbot.yml">certbot.yml</a><ul>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/nginx/tasks/certbot.yml#L4">add certbot ppa to apt</a></li>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/nginx/tasks/certbot.yml#L8">install certbot</a></li>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/nginx/tasks/certbot.yml#L13">ensure certbot well-known path exists</a></li>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/nginx/tasks/certbot.yml#L18">test if certbot has been initialized</a></li>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/nginx/tasks/certbot.yml#L23">ensure any pending nginx reload happens immediately</a></li>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/nginx/tasks/certbot.yml#L27">intialize certbot</a></li>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/nginx/tasks/certbot.yml#L36">ensure certbot certs are linked</a></li>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/nginx/tasks/certbot.yml#L47">Add cron job for cert renewal</a></li>
+</ul>
+</li>
+</ul>
+<p>And the following templates:</p>
+<ul>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/nginx/templates/gzip_params">gzip_params</a></li>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/nginx/templates/site.conf">site.conf</a></li>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/nginx/templates/ssl_params">ssl_params</a></li>
+</ul>
+<p><em>(Browse the <a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/nginx">deploy/ansible/roles/nginx</a> directory for more information)</em></p>
+<h4 id="users-role"><a class="anchor" aria-hidden="true" href="#users-role"><span class="octicon octicon-link"></span></a>users role</h4>
+<p>In development (<a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/users/tasks/localuser.yml">localuser.yml</a>),
+create an account for the currently logged-in user, and copy their public key to
+the server. This makes it possible to run other playbooks without specifying a
+user or private key on the command line.</p>
+<p>In production (<a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/users/tasks/users.yml">users.yml</a>), ensure all
+users have been added, along with any public keys. If any user&#39;s state is
+<code>absent</code>, they will be removed. If any keys are removed, they will be deleted.
+In a development environment, make sudo passwordless, for convenience.</p>
+<p>User accounts, passwords and public keys can be configured in the <code>USERS</code>
+section of the <a href="#ansible-variables">global variables</a> file.</p>
+<p>This role contains the following files and tasks:</p>
+<ul>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/users/tasks/users.yml">users.yml</a><ul>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/users/tasks/users.yml#L5">ensure users are synced</a></li>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/users/tasks/users.yml#L16">ensure user public keys are synced</a></li>
+</ul>
+</li>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/users/tasks/main.yml">main.yml</a></li>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/users/tasks/localuser.yml">localuser.yml</a><ul>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/users/tasks/localuser.yml#L5">ensure local user is synced</a></li>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/users/tasks/localuser.yml#L13">ensure the local user&#39;s public key is synced</a></li>
+</ul>
+</li>
+</ul>
+<p><em>(Browse the <a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/users">deploy/ansible/roles/users</a> directory for more information)</em></p>
+<h4 id="deploy-role"><a class="anchor" aria-hidden="true" href="#deploy-role"><span class="octicon octicon-link"></span></a>deploy role</h4>
+<p>Clone the repo and check out the specified commit unless it has already been
+checked out. When done, symlink the specified commit to make it go live, and
+remove old clones to free up disk space.</p>
+<p>The Git repo URL, deployment paths, number of recent deployments to retain and
+build info file path can be configured in the <code>DEPLOY</code> section of the
+<a href="#ansible-variables">global variables</a> file.</p>
+<p>The following variables defined in the <code>DEPLOY EXTRA VARS</code> section of the same
+file may be overridden on the <code>ansible-playbook</code> command line in the format
+<code>--extra-vars=&quot;commit=mybranch force=true&quot;</code>.</p>
+<table>
+<thead>
+<tr>
+<th>var</th>
+<th>default</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>remote</code></td>
+<td><code>bocoup</code></td>
+<td>Specify any remote (typically a github user).</td>
+</tr>
+<tr>
+<td><code>commit</code></td>
+<td><code>master</code></td>
+<td>Specify any ref (eg. branch, tag, SHA) to be deployed. This ref must be pushed to the remote <code>git_repo</code> before it can be deployed.</td>
+</tr>
+<tr>
+<td><code>force</code></td>
+<td><code>false</code></td>
+<td>Clone and build the specified commit SHA, regardless of prior build status.</td>
+</tr>
+<tr>
+<td><code>local</code></td>
+<td><code>false</code></td>
+<td>Use the local project Git repo instead of the remote <code>git_repo</code>. This option only works with the <code>vagrant</code> inventory, and not with <code>staging</code> or <code>production</code>.</td>
+</tr>
+</tbody>
+</table>
+<p>The <a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/deploy/tasks/build.yml">build.yml</a> file contains all the
+build tasks that need to be run after your project is cloned, eg. <code>npm install</code>,
+<code>npm run build</code>. Don&#39;t be afraid to modify these tasks. Your project&#39;s build
+process might need to be different than what&#39;s here, so adjust accordingly!</p>
+<p>This role contains the following files and tasks:</p>
+<ul>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/deploy/tasks/main.yml">main.yml</a><ul>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/deploy/tasks/main.yml#L6">check if specified commit has already been deployed</a></li>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/deploy/tasks/main.yml#L13">link sha-named clone to make it live</a></li>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/deploy/tasks/main.yml#L20">update last-modification time of sha-named clone</a></li>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/deploy/tasks/main.yml#L23">remove old clones to free up disk space</a></li>
+</ul>
+</li>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/deploy/tasks/checkout.yml">checkout.yml</a><ul>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/deploy/tasks/checkout.yml#L5">ensure pre-existing temp directory is removed</a></li>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/deploy/tasks/checkout.yml#L8">clone git repo into temp directory</a></li>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/deploy/tasks/checkout.yml#L14">get sha of cloned repo</a></li>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/deploy/tasks/checkout.yml#L21">check if specified commit sha has already been deployed</a></li>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/deploy/tasks/checkout.yml#L28">delete pre-existing sha-named directory</a></li>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/deploy/tasks/checkout.yml#L32">move cloned repo to sha-named directory</a></li>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/deploy/tasks/checkout.yml#L36">ensure just-created temp directory is removed</a></li>
+</ul>
+</li>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/deploy/tasks/build.yml">build.yml</a><ul>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/deploy/tasks/build.yml#L7">compare package.json of current deploy with previous deploy</a></li>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/deploy/tasks/build.yml#L13">copy existing npm modules</a></li>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/deploy/tasks/build.yml#L17">install npm modules</a></li>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/deploy/tasks/build.yml#L21">build production version</a></li>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/deploy/tasks/build.yml#L26">generate build info file</a></li>
+</ul>
+</li>
+</ul>
+<p>And the following templates:</p>
+<ul>
+<li><a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/deploy/templates/build_info.txt">build_info.txt</a></li>
+</ul>
+<p><em>(Browse the <a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/ansible/roles/deploy">deploy/ansible/roles/deploy</a> directory for more information)</em></p>
+<h2 id="vagrant"><a class="anchor" aria-hidden="true" href="#vagrant"><span class="octicon octicon-link"></span></a>Vagrant</h2>
+<p>Vagrant allows you to isolate project dependencies (like nginx or postgres) in a
+stable, disposable, consistent work environment. In conjunction with Ansible and
+VirtualBox, Vagrant ensures that anyone on your team has access to their own
+private, pre-configured development server whenever they need it.</p>
+<p>If you only want to deploy to remote production or staging servers, you can just
+install Ansible and skip VirtualBox and Vagrant, which are only used to create
+the local development server.</p>
+<h3 id="configuring-vagrant"><a class="anchor" aria-hidden="true" href="#configuring-vagrant"><span class="octicon octicon-link"></span></a>Configuring Vagrant</h3>
+<p>The <a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/../Vagrantfile">Vagrantfile</a> file at the root of the repo contains the
+project&#39;s Vagrant configuration. Be sure to specify an appropriate hostname
+alias for the Vagrant box here.</p>
+<h3 id="using-vagrant"><a class="anchor" aria-hidden="true" href="#using-vagrant"><span class="octicon octicon-link"></span></a>Using Vagrant</h3>
+<p>Once the <a href="#configuring-vagrant">Vagrantfile</a> and <a href="#ansible-configuration">Ansible variables, playbooks
+and roles</a> have been customized to meet your project&#39;s
+needs, you should be able to run <code>vagrant up</code> to create a local,
+fully-provisioned Vagrant server that is accessible in-browser via the hostname
+alias specified in the Vagrantfile. <em>If you&#39;re asked for your administrator
+password during this process, it&#39;s so that the hostsupdater plugin can modify
+your <code>/etc/hosts</code> file.</em></p>
+<p>If you change the Ansible configuration, running <code>vagrant provision</code> will re-run
+the Ansible playbooks. If you make drastic changes to the Ansible configuration
+and need to recreate the Vagrant server (which is often the case), you can
+delete it with <code>vagrant destroy</code>. <em>If you do this, be sure to let collaborators
+know too!</em></p>
+<p>See the Vagrant <a href="http://docs.vagrantup.com/v2/provisioning/ansible.html">Ansible
+provisioner</a>
+documentation for more information.</p>
+<h3 id="using-ssh-with-vagrant"><a class="anchor" aria-hidden="true" href="#using-ssh-with-vagrant"><span class="octicon octicon-link"></span></a>Using SSH with Vagrant</h3>
+<p>Vagrant provides the <code>vagrant ssh</code> command which allows you to connect to the
+Vagrant box via its built-in <code>vagrant</code> user. While this is convenient for some
+basic development tasks, once provisioned, you should connect to the Vagrant box
+using the user account created by the <a href="#users-role">users role</a>. This will
+ensure that the <a href="#deploying">ansible-playbook</a> command, which uses <code>ssh</code>
+internally, will work, allowing you to deploy.</p>
+<p>To connect to Vagrant in this way, use the <code>ssh</code> command along with the
+hostname alias defined in the <a href="#configuring-vagrant">Vagrantfile</a>. Eg, for this
+example project, the command would be <code>ssh deployment-workflow.loc</code>.</p>
+<p>Also, adding a <a href="https://github.com/cowboy/dotfiles/blob/8e4fa2a/link/.ssh/config#L9-L14">section like
+this</a>
+to your <code>~/.ssh/config</code> file will prevent SSH from storing Vagrant box keys in
+<code>~/.ssh/known_hosts</code> and complaining about them not matching when a Vagrant
+box is destroyed and recreated. <em>Do not do this for production servers. This is
+only safe for private, local virtual machines!</em></p>
+<h2 id="deploying"><a class="anchor" aria-hidden="true" href="#deploying"><span class="octicon octicon-link"></span></a>Deploying</h2>
+<p>Once you&#39;ve customized <a href="#ansible-configuration">Ansible variables, playbooks and
+roles</a> and committed your changes to the Git repository
+configured in <a href="#ansible-variables">global variables</a>, you may run the
+<code>ansible-playbook</code> command or the included <a href="#playbook-helper-script">playbook helper
+script</a> to run any <a href="#ansible-playbooks">playbook</a> on
+any <a href="#ansible-inventory">inventory</a> host.</p>
+<h3 id="command-line-flags"><a class="anchor" aria-hidden="true" href="#command-line-flags"><span class="octicon octicon-link"></span></a>Command Line Flags</h3>
+<p>Note that the following flags apply to both <code>ansible-playbook</code> and the included
+<a href="#playbook-helper-script">playbook helper script</a>.</p>
+<ul>
+<li><strong><code>--help</code></strong> - Display usage information and all available options; the list
+here contains only the most relevant subset of all options.</li>
+<li><strong><code>--user</code></strong> - Connect to the server with the specified user. If a user isn&#39;t
+specified, the currently logged-in user&#39;s username will be used.</li>
+<li><strong><code>--ask-become-pass</code></strong> - If the remote user account requires a password to be
+entered, you will need to specify this option.</li>
+<li><strong><code>--private-key</code></strong> - If the remote user account requires a private key, you
+will need to specify this option.</li>
+<li><strong><code>--extra-vars</code></strong> - Values that override those stored in the <a href="#ansible-variables">ansible
+configuration</a> in the format
+<code>--extra-vars=&quot;commit=mybranch force=true&quot;</code>.</li>
+<li><strong><code>-vvvv</code></strong> - Display verbose connection debugging information.</li>
+</ul>
+<h4 id="production-and-staging-notes"><a class="anchor" aria-hidden="true" href="#production-and-staging-notes"><span class="octicon octicon-link"></span></a>Production and Staging Notes</h4>
+<p>Once the <a href="#users-role">users role</a> has run successfully, assuming your user
+account has been correctly added to it, you should be able to omit the <code>--user</code>
+and <code>--private-key</code> command line flags. However, until the users role has run at
+least once:</p>
+<ul>
+<li>the <code>--user</code> flag will need to be specified. For the default AWS EC2 Ubuntu
+AMI, use <code>--user=ubuntu</code>.</li>
+<li>the <code>--private-key</code> flag will need to be specified. For AWS, specify
+<code>--private-key=/path/to/keyfile.pem</code> where <code>keyfile.pem</code> is the file
+downloaded when <a href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html">creating a new key
+pair</a>
+in AWS. <em>Do not store this private key in your project Git repo!</em></li>
+</ul>
+<p>The default AWS <code>ubuntu</code> user doesn&#39;t require a password for <code>sudo</code>, but user
+accounts added via the users role do, so be sure to specify the
+<code>--ask-become-pass</code> flag when you omit the <code>--user</code> command line flag.</p>
+<h4 id="vagrant-notes"><a class="anchor" aria-hidden="true" href="#vagrant-notes"><span class="octicon octicon-link"></span></a>Vagrant Notes</h4>
+<p>Once the <a href="#users-role">users role</a> has run successfully, assuming your user
+account has been correctly added to it, you should be able to omit the <code>--user</code>
+and <code>--private-key</code> command line flags. However, until the users role has run at
+least once:</p>
+<ul>
+<li>specify <code>--user=vagrant</code>, which is the default user created for the Vagrant
+box.</li>
+<li>specify <code>--private-key=.vagrant/machines/vagrant/virtualbox/private_key</code>,
+which is where the private key file for user <code>vagrant</code> is generated during
+<code>vagrant up</code>.</li>
+</ul>
+<p>Additionally, you should never need to use the <code>--ask-become-pass</code> flag in
+Vagrant, once passwordless sudo has been enabled via the <a href="#configure-role">configure
+role</a>. This is done for convenience.</p>
+<h3 id="playbook-helper-script"><a class="anchor" aria-hidden="true" href="#playbook-helper-script"><span class="octicon octicon-link"></span></a>Playbook helper script</h3>
+<p>While you may run the <code>ansible-playbook</code> command manually, the
+<a href="https://github.com/bocoup/deployment-workflow/blob/master/deploy/run-playbook.sh">deploy/run-playbook.sh</a> bash script has been provided to facilitate
+running <code>ansible-playbook</code>.</p>
+<pre><code>Usage: run-playbook.sh playbook[.yml] inventory [--flag ...] [var=value ...]
+
+   playbook  playbook file in deploy/ansible/, the .yml extension is optional.
+  inventory  inventory host file in deploy/ansible/inventory/.
+     --flag  any valid ansible-playbook flags, Eg. --help for help, -vvvv for
+             connection debugging, --user=REMOTE_USER to specify the remote
+             user, --ask-become-pass to prompt for a remote password, etc.
+  var=value  any number of ansible extra vars in the format var=value.
+</code></pre><h4 id="notes"><a class="anchor" aria-hidden="true" href="#notes"><span class="octicon octicon-link"></span></a>Notes</h4>
+<ul>
+<li>Flags and vars must be specified after both <code>playbook</code> and <code>inventory</code>.</li>
+<li>All arguments specified after <code>playbook</code> and <code>inventory</code> not beginning with
+<code>-</code> or <code>--</code> will be treated as extra vars.</li>
+<li>If a non-<code>vagrant</code> inventory host is specified, unless the <code>ubuntu</code> user is
+specified, the <code>--ask-become-pass</code> flag will be automatically added to the
+command.</li>
+<li>You may pass flags to this scripts as you would to <code>ansible-playbook</code>. Eg.
+<code>--help</code> for help, <code>-vvvv</code> for connection debugging, <code>--user=REMOTE_USER</code> to
+specify the remote user, <code>--ask-become-pass</code> to prompt for a remote account
+password, etc.</li>
+<li>You may specify any number of extra variables at the end of the command in the
+format <code>foo=12 bar=34</code> instead of the more verbose default
+<code>--extra-vars=&quot;foo=12 bar=34&quot;</code>.</li>
+</ul>
+<h4 id="examples"><a class="anchor" aria-hidden="true" href="#examples"><span class="octicon octicon-link"></span></a>Examples</h4>
+<p>The following command to run the <code>provision</code> playbook on the
+<code>production</code> inventory host with the <code>--user</code> and <code>--private-key</code> command line
+flags:</p>
+<ul>
+<li><code>ansible-playbook deploy/ansible/provision.yml
+--inventory=deploy/ansible/inventory/production --user=ubuntu
+--private-key=~/keyfile.pem</code></li>
+</ul>
+<p>can be run like:</p>
+<ul>
+<li><code>./deploy/run-playbook.sh provision production --user=ubuntu
+--private-key=~/keyfile.pem</code></li>
+</ul>
+<p>And the following command to run the <code>deploy</code> playbook on the <code>vagrant</code>
+inventory host with the <code>commit</code> and <code>local</code> extra variables:</p>
+<ul>
+<li><code>ansible-playbook deploy/ansible/deploy.yml
+--inventory=deploy/ansible/inventory/vagrant --extra-vars=&quot;commit=testing
+local=true&quot;</code></li>
+</ul>
+<p>can be run like:</p>
+<ul>
+<li><code>./deploy/run-playbook.sh deploy vagrant commit=testing local=true</code></li>
+</ul>
+<h4 id="more-examples"><a class="anchor" aria-hidden="true" href="#more-examples"><span class="octicon octicon-link"></span></a>More Examples</h4>
+<ul>
+<li>Assume these examples are run from the root directory of your project&#39;s Git
+repository.</li>
+<li>Don&#39;t type in the <code>$</code>, that&#39;s just there to simulate your shell prompt.</li>
+</ul>
+<pre><code class="lang-bash"># Provision the production server using the ubuntu user and the ~/keyfile.pem
+# private key. Note that while this installs apt packages, it doesn&#39;t
+# configure the server or deploy the site.
+
+$ ./deploy/run-playbook.sh provision production --user=ubuntu --private-key=~/keyfile.pem
+</code></pre>
+<pre><code class="lang-bash"># Run just the tasks from the nginx role from the configure playbook on the
+# production server. Using tags can save time when only tasks from a certain
+# role need to be re-run.
+
+$ ./deploy/run-playbook.sh configure production --tags=nginx
+</code></pre>
+<pre><code class="lang-bash"># If the current commit at the HEAD of master was previously deployed, this
+# won&#39;t rebuild it. However, it will still be symlinked and made live, in case
+# a different commit was previously made live. If master has changed since it
+# was last deployed, and that commit hasn&#39;t yet been deployed, it will be
+# cloned and built before being symlinked and made live.
+
+$ ./deploy/run-playbook.sh deploy production
+</code></pre>
+<pre><code class="lang-bash"># Like above, but instead of the HEAD of master, deploy the specified
+# branch/tag/sha.
+
+$ ./deploy/run-playbook.sh deploy production commit=my-feature
+$ ./deploy/run-playbook.sh deploy production commit=v1.0.0
+$ ./deploy/run-playbook.sh deploy production commit=8f93601a6bc7efeb90b1961d7574b47f61018b6f
+</code></pre>
+<pre><code class="lang-bash"># Regardless of the prior deploy state of commit at the HEAD of the my-feature
+# branch, re-clone and rebuild it before symlinking it and making it live.
+
+$ ./deploy/run-playbook.sh deploy production commit=my-feature force=true
+</code></pre>
+<pre><code class="lang-bash"># Deploy the specified branch to the Vagrant box from the local project Git
+# repo instead of the remote Git URL. This way, the specified commit can be
+# tested before being pushed to the remote Git repository.
+
+$ ./deploy/run-playbook.sh deploy vagrant commit=my-feature local=true
+</code></pre>
+<pre><code class="lang-bash"># Link the local project directory into the Vagrant box, allowing local changes
+# to be previewed there immediately. This is run automatically at the end of
+# &quot;vagrant up&quot;.
+
+$ ./deploy/run-playbook.sh vagrant-link vagrant
+</code></pre>
+
+    </div>
+  </div>
+
+</div>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-61867051-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+</body>
+</html>

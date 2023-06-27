@@ -25,10 +25,10 @@ body {
   border-top: solid transparent;
   border-width: 10px 0 10px 0;
   border-style: solid;
-  -webkit-border-image: url(https://static.bocoup.com/assets/img/rainbow-header.svg.gz) 4 1 4 1 stretch;
-  -moz-border-image: url(https://static.bocoup.com/assets/img/rainbow-header.svg.gz) 4 1 4 1 stretch;
-  -o-border-image: url(https://static.bocoup.com/assets/img/rainbow-header.svg.gz) 4 1 4 1 stretch;
-  border-image: url(https://static.bocoup.com/assets/img/rainbow-header.svg.gz) 4 1 4 1 stretch;
+  -webkit-border-image: url(rainbow-header.svg) 4 1 4 1 stretch;
+  -moz-border-image: url(rainbow-header.svg) 4 1 4 1 stretch;
+  -o-border-image: url(rainbow-header.svg) 4 1 4 1 stretch;
+  border-image: url(rainbow-header.svg) 4 1 4 1 stretch;
   min-height: 100vh;
 }
 
@@ -77,50 +77,6 @@ h2 {
   margin: .25em 0 0;
       border-bottom: 1px solid #D6D6D6;
     padding-bottom: .5em;
-}
-
-#mc_embed_signup.newsletter {
-  background: #f6f4ec;
-  padding: 1em;
-  margin-top: 1.5em;
-}
-
-#mc_embed_signup.newsletter h2 {
-  border-bottom: none;
-  margin-top: 0;
-  font-size: 1.2em;
-  font-size: 1em;
-  font-weight: 400;
-}
-
-#mc_embed_signup.newsletter form {
-  padding: 0;
-}
-
-#mc_embed_signup.newsletter input.email{
-  width: 100%;
-  font-size: 1em;
-  padding: .7em;
-  border: 1px solid #D6D6D6;
-}
-
-#mc_embed_signup.newsletter input.btn {
-  cursor: pointer;
-  width: 100%;
-  background: #fff;
-  border: 3px solid;
-  color: #24b4ca;
-  clear: both;
-  display: block;
-  font-size: 16px;
-  font-weight: 700;
-  line-height: 1.2;
-  margin-top: .5em;
-  padding: .7em 1.2em .6em;
-  border-radius: 0;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
 }
 
 #mc_embed_signup input.btn:hover {
@@ -450,4 +406,13 @@ code {
   .nav {
     margin-bottom: 2em;
   }
+}
+
+.warning {
+  border-width: 1px;
+  padding: 1em;
+
+  background-color: #ffdddd;
+  border-color: #ff0000;
+  border-style: solid;
 }
